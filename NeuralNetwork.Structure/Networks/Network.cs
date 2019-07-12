@@ -7,6 +7,7 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NeuralNetwork.Structure.Networks
@@ -26,6 +27,8 @@ namespace NeuralNetwork.Structure.Networks
         private IReadOnlyLayer<IMasterNode> _inputLayer;
 
         #endregion
+
+        private SemaphoreSlim _processingLocker = new SemaphoreSlim(1, 1);
 
         public event Action<IEnumerable<double>> OnOutput;
         public event Action<IEnumerable<double>> OnInput;
@@ -59,19 +62,6 @@ namespace NeuralNetwork.Structure.Networks
 
         #endregion
 
-        #region IOutputSet
-
-        public virtual async Task<IEnumerable<double>> Output()
-        {
-            var result = await OutputLayer.Output().ConfigureAwait(false);
-
-            OnOutput?.Invoke(result);
-
-            return result;
-        }
-
-        #endregion
-
         /// <summary> 
         /// Write input value to each input-neuron (<see cref="IInput{double}"/>) in input-layer.
         /// </summary>
@@ -80,15 +70,30 @@ namespace NeuralNetwork.Structure.Networks
         {
             Contract.Requires(input != null, nameof(input));
 
-            OnInput?.Invoke(input);
-
-            Refresh();
-
-            var inputNodes = _inputLayer.Nodes.OfType<IInputNode>().ToArray();
-            var index = 0;
-            foreach (var value in input)
+            try
             {
-                inputNodes[index++].Input(value);
+                //TODO: create async call
+                _processingLocker.Wait();
+
+                _processInput(input);
+            }
+            finally
+            {
+                _processingLocker.Release();
+            }
+        }
+
+        public virtual async Task<IEnumerable<double>> Output()
+        {
+            try
+            {
+                await _processingLocker.WaitAsync();
+
+                return await _processOutput();
+            }
+            finally
+            {
+                _processingLocker.Release();
             }
         }
 
@@ -102,6 +107,7 @@ namespace NeuralNetwork.Structure.Networks
                 var ser = new DataContractSerializer(typeof(T), serSettings);
                 ser.WriteObject(stream, this);
                 stream.Position = 0;
+
                 return ser.ReadObject(stream) as T;
             }
         }
@@ -110,6 +116,38 @@ namespace NeuralNetwork.Structure.Networks
         {
             return network.GetClone<T>();
         }
+
+        #region private methods
+
+        private void _processInput(IEnumerable<double> input)
+        {
+            OnInput?.Invoke(input);
+
+            Refresh();
+
+            _inputToNodes(input);
+        }
+
+        private void _inputToNodes(IEnumerable<double> input)
+        {
+            var inputNodes = _inputLayer.Nodes.OfType<IInputNode>().ToArray();
+            var index = 0;
+            foreach (var value in input)
+            {
+                inputNodes[index++].Input(value);
+            }
+        }
+
+        private async Task<IEnumerable<double>> _processOutput()
+        {
+            var result = await OutputLayer.Output().ConfigureAwait(false);
+
+            OnOutput?.Invoke(result);
+
+            return result;
+        }
+
+        #endregion
 
     }
 }

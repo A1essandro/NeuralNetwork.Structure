@@ -13,7 +13,9 @@ namespace NeuralNetwork.Structure.Summators
         public async Task<double> GetSum(ISlaveNode node)
         {
             var tasks = node.Synapses.Select(x => x.Output());
-            return (await Task.WhenAll(tasks).ConfigureAwait(false)).Sum();
+            var tasksResult = await Task.WhenAll(tasks).ConfigureAwait(false);
+
+            return tasksResult.Sum();
         }
 
     }
