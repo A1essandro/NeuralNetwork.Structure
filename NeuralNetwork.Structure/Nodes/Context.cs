@@ -45,20 +45,10 @@ namespace NeuralNetwork.Structure.Nodes
         /// <returns></returns>
         public override async Task<double> Output()
         {
-            if (!_calculated)
-            {
-                _memory.Enqueue(await base.Output());
-                _currentValue = _memory.Dequeue();
-                _calculated = true;
-            }
+            _memory.Enqueue(await base.Output());
+            _currentValue = _memory.Dequeue();
 
             return _currentValue;
-        }
-
-        public override void Refresh()
-        {
-            base.Refresh();
-            _calculated = false;
         }
 
     }

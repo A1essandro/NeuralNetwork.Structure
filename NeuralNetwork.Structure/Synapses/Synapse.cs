@@ -29,6 +29,8 @@ namespace NeuralNetwork.Structure.Synapses
 
         public event Action<double> OnOutput;
 
+        public event Func<ISynapse, double, Task> OnResultCalculated;
+
         /// <summary>
         /// Change value of weight
         /// </summary>
@@ -61,6 +63,15 @@ namespace NeuralNetwork.Structure.Synapses
 
             MasterNode = masterNode;
             Weight = weight;
+
+            MasterNode.OnResultCalculated += _conductData;
+        }
+
+        private async Task _conductData(INode synapse, double data)
+        {
+            var result = await Output();
+
+            await OnResultCalculated(this, result);
         }
 
     }

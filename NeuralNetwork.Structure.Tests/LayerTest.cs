@@ -1,7 +1,6 @@
 ﻿using NeuralNetwork.Structure.ActivationFunctions;
 using NeuralNetwork.Structure.Layers;
 using NeuralNetwork.Structure.Nodes;
-using System;
 using System.Linq;
 using Xunit;
 
@@ -30,7 +29,6 @@ namespace Tests
             Assert.Equal(neuronsQty + 1, layer.Nodes.Count());
             Assert.IsType<InputNode>(layer.Nodes.ToArray()[5]);
             Assert.IsType<Bias>(layer.Nodes.Last());
-            Assert.Throws<NullReferenceException>(() => (layer.Nodes.Last() as IInputNode).Input(1));
         }
 
         [Fact]

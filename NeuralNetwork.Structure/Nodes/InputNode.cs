@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NeuralNetwork.Structure.Common;
+using NeuralNetwork.Structure.Layers;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -13,12 +15,23 @@ namespace NeuralNetwork.Structure.Nodes
         private double _data;
 
         public event Action<double> OnOutput;
-        public event Action<double> OnInput;
+        public event Func<IInput<double>, double, Task> OnInput;
 
-        public void Input(double input)
+        public event Func<INode, double, Task> OnResultCalculated;
+
+        public virtual void AttachToLayer(IReadOnlyLayer<INode> layer)
         {
-            OnInput?.Invoke(input);
+        }
+
+        public async Task Input(double input)
+        {
+            if (OnInput != null)
+                await OnInput(this, input);
+
             _data = input;
+
+            if (OnResultCalculated != null)
+                await OnResultCalculated(this, input);
         }
 
         public Task<double> Output()
@@ -26,5 +39,6 @@ namespace NeuralNetwork.Structure.Nodes
             OnOutput?.Invoke(_data);
             return Task.FromResult(_data);
         }
+
     }
 }

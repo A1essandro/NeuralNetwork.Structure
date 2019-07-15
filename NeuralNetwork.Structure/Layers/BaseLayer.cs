@@ -1,4 +1,5 @@
 using NeuralNetwork.Structure.Common;
+using NeuralNetwork.Structure.Networks;
 using NeuralNetwork.Structure.Nodes;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,8 @@ namespace NeuralNetwork.Structure.Layers
         protected List<TNode> NodeList = new List<TNode>();
 
         public event Action<IEnumerable<double>> OnOutput;
+
+        public event Func<IReadOnlyLayer<TNode>, IEnumerable<double>, Task> OnNetworkInput;
 
         public IEnumerable<TNode> Nodes => NodeList.AsReadOnly();
 
@@ -69,22 +72,25 @@ namespace NeuralNetwork.Structure.Layers
             return NodeList.Remove(node);
         }
 
-        public void Refresh()
-        {
-            foreach (var n in NodeList.OfType<IRefreshable>())
-            {
-                n.Refresh();
-            }
-        }
-
         public async Task<IEnumerable<double>> Output()
         {
             var result = await Task.WhenAll(Nodes.Select(n => n.Output())).ConfigureAwait(false);
 
-            OnOutput?.Invoke(result);
+            if (OnOutput != null)
+                OnOutput.Invoke(result);
 
             return result;
         }
 
+        public virtual void AttachToNetwork(ISimpleNetwork network)
+        {
+            network.OnInput += _onNetworkInputHandler;
+        }
+
+        private async Task _onNetworkInputHandler(IInput<IEnumerable<double>> network, IEnumerable<double> input)
+        {
+            if (OnNetworkInput != null)
+                await OnNetworkInput(this, input);
+        }
     }
 }

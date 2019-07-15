@@ -16,32 +16,52 @@ namespace NeuralNetwork.Structure.Networks
     [DataContract]
     [KnownType(typeof(InputLayer))]
     [KnownType(typeof(Layer))]
-    public class Network : INetwork
+    public class Network : IMultilayerNetwork
     {
 
         #region serialization data
 
         [DataMember]
-        private ICollection<IReadOnlyLayer<INotInputNode>> _layers;
+        private ICollection<IReadOnlyLayer<INotInputNode>> _innerLayers;
         [DataMember]
         private IReadOnlyLayer<IMasterNode> _inputLayer;
+        [DataMember]
+        private IReadOnlyLayer<INotInputNode> _outputLayer;
 
         #endregion
 
         private SemaphoreSlim _processingLocker = new SemaphoreSlim(1, 1);
 
         public event Action<IEnumerable<double>> OnOutput;
-        public event Action<IEnumerable<double>> OnInput;
+        public event Func<IInput<IEnumerable<double>>, IEnumerable<double>, Task> OnInput;
 
-        public IReadOnlyLayer<IMasterNode> InputLayer => _inputLayer;
-        public virtual ICollection<IReadOnlyLayer<INotInputNode>> Layers => _layers;
-        public virtual IReadOnlyLayer<INotInputNode> OutputLayer => Layers.Last();
+        public virtual IReadOnlyLayer<IMasterNode> InputLayer
+        {
+            get => _inputLayer;
+            set
+            {
+                _inputLayer = value;
+                _inputLayer.AttachToNetwork(this);
+            }
+        }
+
+        public virtual ICollection<IReadOnlyLayer<INotInputNode>> InnerLayers => _innerLayers;
+
+        public virtual IReadOnlyLayer<INotInputNode> OutputLayer
+        {
+            get => _outputLayer;
+            set
+            {
+                _outputLayer = value;
+                _outputLayer.AttachToNetwork(this);
+            }
+        }
 
         #region ctors
 
         public Network()
         {
-            _layers = new List<IReadOnlyLayer<INotInputNode>>();
+            _innerLayers = new List<IReadOnlyLayer<INotInputNode>>();
             _inputLayer = new InputLayer();
         }
 
@@ -52,7 +72,7 @@ namespace NeuralNetwork.Structure.Networks
             Contract.Requires(inputLayer.Nodes.Any(n => n is IInputNode));
 
             _inputLayer = inputLayer;
-            _layers = layers;
+            _innerLayers = layers;
         }
 
         public Network(IReadOnlyLayer<IMasterNode> inputLayer, params IReadOnlyLayer<INotInputNode>[] layers)
@@ -66,16 +86,15 @@ namespace NeuralNetwork.Structure.Networks
         /// Write input value to each input-neuron (<see cref="IInput{double}"/>) in input-layer.
         /// </summary>
         /// <param name="input"></param>
-        public virtual void Input(IEnumerable<double> input)
+        public virtual async Task Input(IEnumerable<double> input)
         {
             Contract.Requires(input != null, nameof(input));
 
             try
             {
-                //TODO: create async call
-                _processingLocker.Wait();
+                await _processingLocker.WaitAsync();
 
-                _processInput(input);
+                await _processInput(input);
             }
             finally
             {
@@ -97,8 +116,6 @@ namespace NeuralNetwork.Structure.Networks
             }
         }
 
-        public void Refresh() => Parallel.ForEach(Layers, l => l.Refresh());
-
         protected virtual T GetClone<T>() where T : Network
         {
             using (var stream = new MemoryStream())
@@ -119,11 +136,10 @@ namespace NeuralNetwork.Structure.Networks
 
         #region private methods
 
-        private void _processInput(IEnumerable<double> input)
+        private async Task _processInput(IEnumerable<double> input)
         {
-            OnInput?.Invoke(input);
-
-            Refresh();
+            if (OnInput != null)
+                await OnInput(this, input);
 
             _inputToNodes(input);
         }
@@ -145,6 +161,15 @@ namespace NeuralNetwork.Structure.Networks
             OnOutput?.Invoke(result);
 
             return result;
+        }
+
+        public ISimpleNetwork AddInnerLayer(ILayer<INotInputNode> layer)
+        {
+            _innerLayers.Add(layer);
+
+            layer.AttachToNetwork(this);
+
+            return this;
         }
 
         #endregion

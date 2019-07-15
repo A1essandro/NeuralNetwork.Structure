@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace NeuralNetwork.Structure.Common
 {
+
     public interface IInput<T>
     {
 
@@ -9,9 +11,9 @@ namespace NeuralNetwork.Structure.Common
         /// Write input value
         /// </summary>
         /// <param name="input">Input value to write</param>
-        void Input(T input);
+        Task Input(T input);
 
-        event Action<T> OnInput;
+        event Func<IInput<T>, T, Task> OnInput;
 
     }
 

@@ -1,5 +1,5 @@
-﻿using NeuralNetwork.Structure.Common;
-using NeuralNetwork.Structure.ActivationFunctions;
+﻿using NeuralNetwork.Structure.ActivationFunctions;
+using NeuralNetwork.Structure.Layers;
 using NeuralNetwork.Structure.Summators;
 using NeuralNetwork.Structure.Synapses;
 using System;
@@ -20,7 +20,7 @@ namespace NeuralNetwork.Structure.Nodes
     [KnownType(typeof(Linear))]
     [KnownType(typeof(Gaussian))]
     [KnownType(typeof(AsIs))]
-    public class Neuron : ISlaveNode, IRefreshable
+    public class Neuron : ISlaveNode
     {
 
         #region serialization data
@@ -66,6 +66,8 @@ namespace NeuralNetwork.Structure.Nodes
         #endregion
 
         public event Action<double> OnOutput;
+
+        public event Func<INode, double, Task> OnResultCalculated;
 
         #region ctors
 
@@ -127,15 +129,16 @@ namespace NeuralNetwork.Structure.Nodes
             Contract.Requires(synapse != null, nameof(synapse));
 
             _synapses.Add(synapse);
+
+            synapse.OnResultCalculated += async (s, data) =>
+            {
+                if (OnResultCalculated != null)
+                    await OnResultCalculated(this, await Output());
+            };
         }
 
-        /// <summary>
-        /// Zeroing of output calculation
-        /// Should be called after entry new Input data
-        /// </summary>
-        public virtual void Refresh()
+        public virtual void AttachToLayer(IReadOnlyLayer<INode> layer)
         {
-            _calculatedOutput = null;
         }
 
         [OnDeserializing]
