@@ -50,11 +50,11 @@ namespace NeuralNetwork.Structure.Layers
 
             for (var i = 0; i < qty; i++)
             {
-                NodeList.Add(factory());
+                AddNode(factory());
             }
             foreach (var node in other)
             {
-                NodeList.Add(node);
+                AddNode(node);
             }
         }
 
@@ -63,6 +63,8 @@ namespace NeuralNetwork.Structure.Layers
             Contract.Assert(node != null, nameof(node));
 
             NodeList.Add(node);
+
+            node.AttachToLayer(this as IReadOnlyLayer<INode>);
         }
 
         public bool RemoveNode(TNode node)

@@ -22,7 +22,7 @@ namespace NeuralNetwork.Structure.Networks
         #region serialization data
 
         [DataMember]
-        private ICollection<IReadOnlyLayer<INotInputNode>> _innerLayers;
+        private List<IReadOnlyLayer<INotInputNode>> _innerLayers;
         [DataMember]
         private IReadOnlyLayer<IMasterNode> _inputLayer;
         [DataMember]
@@ -45,7 +45,7 @@ namespace NeuralNetwork.Structure.Networks
             }
         }
 
-        public virtual ICollection<IReadOnlyLayer<INotInputNode>> InnerLayers => _innerLayers;
+        public virtual IReadOnlyList<IReadOnlyLayer<INotInputNode>> InnerLayers => _innerLayers.AsReadOnly();
 
         public virtual IReadOnlyLayer<INotInputNode> OutputLayer
         {
@@ -62,7 +62,6 @@ namespace NeuralNetwork.Structure.Networks
         public Network()
         {
             _innerLayers = new List<IReadOnlyLayer<INotInputNode>>();
-            _inputLayer = new InputLayer();
         }
 
         public Network(IReadOnlyLayer<IMasterNode> inputLayer, ICollection<IReadOnlyLayer<INotInputNode>> layers)
@@ -72,7 +71,7 @@ namespace NeuralNetwork.Structure.Networks
             Contract.Requires(inputLayer.Nodes.Any(n => n is IInputNode));
 
             _inputLayer = inputLayer;
-            _innerLayers = layers;
+            _innerLayers = layers.ToList();
         }
 
         public Network(IReadOnlyLayer<IMasterNode> inputLayer, params IReadOnlyLayer<INotInputNode>[] layers)
@@ -163,7 +162,7 @@ namespace NeuralNetwork.Structure.Networks
             return result;
         }
 
-        public ISimpleNetwork AddInnerLayer(ILayer<INotInputNode> layer)
+        public IMultilayerNetwork AddInnerLayer(ILayer<INotInputNode> layer)
         {
             _innerLayers.Add(layer);
 
