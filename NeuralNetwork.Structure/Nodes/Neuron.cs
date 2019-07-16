@@ -137,7 +137,7 @@ namespace NeuralNetwork.Structure.Nodes
             };
         }
 
-        public virtual void AttachToLayer(IReadOnlyLayer<INode> layer)
+        public virtual void AttachTo(IReadOnlyLayer<INode> layer)
         {
         }
 

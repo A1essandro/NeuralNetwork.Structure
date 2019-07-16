@@ -41,7 +41,7 @@ namespace NeuralNetwork.Structure.Networks
             set
             {
                 _inputLayer = value;
-                _inputLayer.AttachToNetwork(this);
+                _inputLayer.AttachTo(this);
             }
         }
 
@@ -53,7 +53,7 @@ namespace NeuralNetwork.Structure.Networks
             set
             {
                 _outputLayer = value;
-                _outputLayer.AttachToNetwork(this);
+                _outputLayer.AttachTo(this);
             }
         }
 
@@ -166,7 +166,7 @@ namespace NeuralNetwork.Structure.Networks
         {
             _innerLayers.Add(layer);
 
-            layer.AttachToNetwork(this);
+            layer.AttachTo(this);
 
             return this;
         }

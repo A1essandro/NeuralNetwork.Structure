@@ -7,10 +7,8 @@ namespace NeuralNetwork.Structure.Nodes
     /// <summary>
     /// Interface for neurons in network
     /// </summary>
-    public interface INode : IOutput<double>, INumberConductor<INode>
+    public interface INode : IOutput<double>, INumberConductor<INode>, IChildStructure<IReadOnlyLayer<INode>>
     {
-
-        void AttachToLayer(IReadOnlyLayer<INode> layer);
 
     }
 

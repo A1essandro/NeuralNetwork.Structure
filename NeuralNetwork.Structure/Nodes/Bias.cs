@@ -20,7 +20,7 @@ namespace NeuralNetwork.Structure.Nodes
             return Task.FromResult(VALUE);
         }
 
-        public void AttachToLayer(IReadOnlyLayer<INode> layer)
+        public void AttachTo(IReadOnlyLayer<INode> layer)
         {
             layer.OnNetworkInput += _onNetworkInputHandler;
         }

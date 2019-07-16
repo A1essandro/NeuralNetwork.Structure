@@ -8,11 +8,9 @@ using System.Threading.Tasks;
 namespace NeuralNetwork.Structure.Layers
 {
 
-    public interface IReadOnlyLayer<out TNode> : IOutput<IEnumerable<double>>
+    public interface IReadOnlyLayer<out TNode> : IOutput<IEnumerable<double>>, IChildStructure<ISimpleNetwork>
         where TNode : INode
     {
-
-        void AttachToNetwork(ISimpleNetwork network);
 
         IEnumerable<TNode> Nodes { get; }
 

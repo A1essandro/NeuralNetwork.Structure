@@ -49,9 +49,9 @@ namespace NeuralNetwork.Structure.Layers
             }
         }
 
-        public override void AttachToNetwork(ISimpleNetwork network)
+        public override void AttachTo(ISimpleNetwork network)
         {
-            base.AttachToNetwork(network);
+            base.AttachTo(network);
         }
 
         private static Type[] GetKnownType() => new Type[] { typeof(BaseLayer<IMasterNode>) };

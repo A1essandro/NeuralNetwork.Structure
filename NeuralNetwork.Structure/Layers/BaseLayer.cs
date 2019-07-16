@@ -64,7 +64,7 @@ namespace NeuralNetwork.Structure.Layers
 
             NodeList.Add(node);
 
-            node.AttachToLayer(this as IReadOnlyLayer<INode>);
+            node.AttachTo(this as IReadOnlyLayer<INode>);
         }
 
         public bool RemoveNode(TNode node)
@@ -84,7 +84,7 @@ namespace NeuralNetwork.Structure.Layers
             return result;
         }
 
-        public virtual void AttachToNetwork(ISimpleNetwork network)
+        public virtual void AttachTo(ISimpleNetwork network)
         {
             network.OnInput += _onNetworkInputHandler;
         }
