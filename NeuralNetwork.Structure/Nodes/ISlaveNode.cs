@@ -1,4 +1,5 @@
 ﻿using NeuralNetwork.Structure.ActivationFunctions;
+using NeuralNetwork.Structure.Common;
 using NeuralNetwork.Structure.Summators;
 using NeuralNetwork.Structure.Synapses;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace NeuralNetwork.Structure.Nodes
     /// <summary>
     /// Node that has synapses
     /// </summary>
-    public interface ISlaveNode : INotInputNode
+    public interface ISlaveNode : INotInputNode, IConnectedElement<ISynapse>
     {
 
         /// <summary>

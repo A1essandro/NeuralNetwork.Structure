@@ -8,7 +8,7 @@ namespace NeuralNetwork.Structure.Synapses
     /// Synapse gets output from neuron-transmitter and convert the value via its weight.
     /// Result value gets neuron-reciever.
     /// </summary>
-    public interface ISynapse : IOutput<double>, INumberConductor<ISynapse>
+    public interface ISynapse : IOutput<double>, INumberConductor<ISynapse>, IConnectedElement<INode>
     {
 
         /// <summary>
@@ -23,9 +23,9 @@ namespace NeuralNetwork.Structure.Synapses
         double Weight { get; set; }
 
         /// <summary>
-        /// Node transmitter
+        /// Transmitter node
         /// </summary>
-        INode MasterNode { get; set; }
+        INode MasterNode { get; }
 
     }
 }

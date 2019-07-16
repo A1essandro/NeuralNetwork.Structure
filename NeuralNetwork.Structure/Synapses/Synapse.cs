@@ -19,7 +19,7 @@ namespace NeuralNetwork.Structure.Synapses
         /// Node transmitter
         /// </summary>
         [DataMember]
-        public INode MasterNode { get; set; }
+        public INode MasterNode { get; protected set; }
 
         /// <summary>
         /// Current weight of synapse
@@ -64,7 +64,7 @@ namespace NeuralNetwork.Structure.Synapses
             MasterNode = masterNode;
             Weight = weight;
 
-            MasterNode.OnResultCalculated += _conductData;
+            ConnectTo(masterNode);
         }
 
         private async Task _conductData(INode synapse, double data)
@@ -72,6 +72,13 @@ namespace NeuralNetwork.Structure.Synapses
             var result = await Output();
 
             await OnResultCalculated(this, result);
+        }
+
+        public virtual void ConnectTo(INode connectionElement)
+        {
+            MasterNode = connectionElement;
+
+            MasterNode.OnResultCalculated += _conductData;
         }
 
     }

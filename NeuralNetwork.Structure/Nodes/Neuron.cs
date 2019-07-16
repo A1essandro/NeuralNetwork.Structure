@@ -34,6 +34,9 @@ namespace NeuralNetwork.Structure.Nodes
         [DataMember]
         private IActivationFunction _actFunction;
 
+        [DataMember]
+        private readonly HashSet<ISynapse> _connections = new HashSet<ISynapse>();
+
         #endregion
 
         protected static IActivationFunction DefaultActivationFunction = new AsIs();
@@ -139,6 +142,15 @@ namespace NeuralNetwork.Structure.Nodes
 
         public virtual void AttachTo(IReadOnlyLayer<INode> layer)
         {
+        }
+
+        public void ConnectTo(ISynapse connectionElement)
+        {
+            if (_connections.Contains(connectionElement))
+                return;
+
+            _connections.Add(connectionElement);
+            //TODO: Use summator
         }
 
         [OnDeserializing]
