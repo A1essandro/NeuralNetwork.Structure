@@ -34,9 +34,6 @@ namespace NeuralNetwork.Structure.Nodes
         [DataMember]
         private IActivationFunction _actFunction;
 
-        [DataMember]
-        private readonly HashSet<ISynapse> _connections = new HashSet<ISynapse>();
-
         #endregion
 
         protected static IActivationFunction DefaultActivationFunction = new AsIs();
@@ -83,6 +80,7 @@ namespace NeuralNetwork.Structure.Nodes
         {
             _actFunction = function;
             _summator = summator ?? DefaultSummator;
+            _summator.OnResultCalculated += _calculate;
         }
 
         public Neuron(IActivationFunction function, ICollection<ISynapse> synapses)
@@ -96,6 +94,7 @@ namespace NeuralNetwork.Structure.Nodes
         {
             _synapses = synapses;
             _summator = summator;
+            _summator.OnResultCalculated += _calculate;
         }
 
         #endregion
@@ -146,11 +145,14 @@ namespace NeuralNetwork.Structure.Nodes
 
         public void ConnectTo(ISynapse connectionElement)
         {
-            if (_connections.Contains(connectionElement))
-                return;
+            _summator.ConnectTo(connectionElement);
 
-            _connections.Add(connectionElement);
             //TODO: Use summator
+        }
+
+        private Task _calculate(ISummator summator, double value)
+        {
+            return Task.FromResult(_actFunction.GetEquation(value));
         }
 
         [OnDeserializing]

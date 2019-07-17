@@ -10,6 +10,8 @@ namespace NeuralNetwork.Structure.Summators
     public class EuclidRangeSummator : ISummator
     {
 
+        public event Func<ISummator, double, Task> OnResultCalculated;
+
         public Task<double> GetSum(ISlaveNode node) => GetEuclidRange(node);
 
         public async static Task<double> GetEuclidRange(ISlaveNode node)
@@ -27,6 +29,11 @@ namespace NeuralNetwork.Structure.Summators
             var output = await synapse.MasterNode.Output().ConfigureAwait(false);
 
             return Math.Pow(output - synapse.Weight, 2);
+        }
+
+        public void ConnectTo(ISynapse connectionElement)
+        {
+            throw new NotImplementedException();
         }
     }
 }
