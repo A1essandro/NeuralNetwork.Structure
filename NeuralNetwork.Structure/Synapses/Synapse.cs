@@ -40,9 +40,10 @@ namespace NeuralNetwork.Structure.Synapses
             Weight += delta;
         }
 
+        [Obsolete]
         public async Task<double> Output()
         {
-            var result = Weight * await MasterNode.Output().ConfigureAwait(false);
+            var result = _calculate(await MasterNode.Output());
             OnOutput?.Invoke(result);
 
             return result;
@@ -67,19 +68,21 @@ namespace NeuralNetwork.Structure.Synapses
             ConnectTo(masterNode);
         }
 
-        private async Task _conductData(INode synapse, double data)
-        {
-            var result = await Output();
-
-            await OnResultCalculated(this, result);
-        }
-
         public virtual void ConnectTo(INode connectionElement)
         {
             MasterNode = connectionElement;
 
             MasterNode.OnResultCalculated += _conductData;
         }
+
+        private async Task _conductData(INode synapse, double data)
+        {
+            var result = _calculate(data);
+
+            await OnResultCalculated(this, result);
+        }
+
+        private double _calculate(double data) => Weight * data;
 
     }
 }

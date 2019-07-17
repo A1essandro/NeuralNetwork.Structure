@@ -1,7 +1,7 @@
 ﻿using NeuralNetwork.Structure.ActivationFunctions;
 using Xunit;
 
-namespace Tests
+namespace NeuralNetwork.Structure.Tests
 {
     public class ActivationFunctionTest
     {

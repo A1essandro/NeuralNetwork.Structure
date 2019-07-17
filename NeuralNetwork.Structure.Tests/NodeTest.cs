@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Tests
+namespace NeuralNetwork.Structure.Tests
 {
 
     public class NodeTest

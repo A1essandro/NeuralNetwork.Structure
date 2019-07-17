@@ -4,7 +4,7 @@ using NeuralNetwork.Structure.Nodes;
 using System.Linq;
 using Xunit;
 
-namespace Tests
+namespace NeuralNetwork.Structure.Tests
 {
     public class LayerTest
     {
