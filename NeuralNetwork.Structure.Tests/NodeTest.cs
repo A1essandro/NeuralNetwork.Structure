@@ -69,7 +69,7 @@ namespace NeuralNetwork.Structure.Tests
         {
             var neuron = new Neuron();
             var inputNeuron = new InputNode();
-            neuron.AddSynapse(new Synapse(inputNeuron, 1));
+            neuron.AddSynapse(new Synapse(inputNeuron, neuron, 1));
 
             var output = 0;
             var input = 0;

@@ -1,4 +1,5 @@
-﻿using NeuralNetwork.Structure.Nodes;
+﻿using NeuralNetwork.Structure.Networks;
+using NeuralNetwork.Structure.Nodes;
 using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
@@ -16,10 +17,16 @@ namespace NeuralNetwork.Structure.Synapses
     {
 
         /// <summary>
-        /// Node transmitter
+        /// Transmitter node
         /// </summary>
         [DataMember]
-        public INode MasterNode { get; protected set; }
+        public virtual INode MasterNode { get; protected set; }
+
+        /// <summary>
+        /// Receiver node
+        /// </summary>
+        [DataMember]
+        public virtual ISlaveNode SlaveNode { get; protected set; }
 
         /// <summary>
         /// Current weight of synapse
@@ -49,23 +56,21 @@ namespace NeuralNetwork.Structure.Synapses
             return result;
         }
 
+        [Obsolete]
         public Synapse()
         {
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="masterNode">Node-transmitter</param>
-        /// <param name="weight">Initial weight</param>
-        public Synapse(INode masterNode, double weight)
+        public Synapse(INode masterNode, ISlaveNode slaveNode, double weight)
         {
             Contract.Requires(masterNode != null, nameof(masterNode));
 
             MasterNode = masterNode;
+            SlaveNode = slaveNode;
             Weight = weight;
 
             ConnectTo(masterNode);
+            slaveNode.ConnectTo(this);
         }
 
         public virtual void ConnectTo(INode connectionElement)
@@ -75,7 +80,13 @@ namespace NeuralNetwork.Structure.Synapses
             MasterNode.OnResultCalculated += _conductData;
         }
 
-        private async Task _conductData(INode synapse, double data)
+        public void AttachTo(ISimpleNetwork parentStructure)
+        {
+        }
+
+        #region private methods
+
+        private async Task _conductData(INode masterNode, double data)
         {
             var result = _calculate(data);
 
@@ -83,6 +94,8 @@ namespace NeuralNetwork.Structure.Synapses
         }
 
         private double _calculate(double data) => Weight * data;
+
+        #endregion
 
     }
 }

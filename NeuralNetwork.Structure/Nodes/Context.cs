@@ -14,8 +14,6 @@ namespace NeuralNetwork.Structure.Nodes
     public class Context : Neuron
     {
 
-        private bool _calculated = false;
-
         private readonly Queue<double> _memory;
 
         private double _currentValue;

@@ -15,22 +15,16 @@ namespace NeuralNetwork.Structure.Tests
         [InlineData(0.1)]
         [InlineData(0.5)]
         [InlineData(1)]
-        public void TestConstructorWithWeight(double val)
+        public void TestConstructor(double val)
         {
-            var node = new Mock<INode>();
-            node.Setup(x => x.Output()).Returns(Task.FromResult(1.0));
+            var master = new Mock<INode>();
+            var slave = new Mock<ISlaveNode>();
 
-            var synapse = new Synapse(node.Object, val);
+            var synapse = new Synapse(master.Object, slave.Object, val);
 
+            Assert.Equal(master.Object, synapse.MasterNode);
+            Assert.Equal(slave.Object, synapse.SlaveNode);
             Assert.Equal(val, synapse.Weight);
-        }
-
-        [Fact]
-        public void TestConstructorWithDefaultWeight()
-        {
-            var synapse = new Synapse();
-
-            Assert.Equal(0, synapse.Weight);
         }
 
         [Theory]
@@ -42,13 +36,14 @@ namespace NeuralNetwork.Structure.Tests
         public void ValuePassingTest(double val)
         {
             var master = new Mock<IMasterNode>();
-            var synapse = new Synapse(master.Object, 0.5);
+            var slave = new Mock<ISlaveNode>();
+            var synapse = new Synapse(master.Object, slave.Object, 0.5);
 
             var result = double.NaN;
             synapse.OnResultCalculated += (s, v) => { result = v; return Task.CompletedTask; };
             master.Raise(x => x.OnResultCalculated += null, master.Object, val);
 
-            Assert.Equal(val / 2, result);
+            Assert.Equal(val * 0.5, result);
         }
 
     }
