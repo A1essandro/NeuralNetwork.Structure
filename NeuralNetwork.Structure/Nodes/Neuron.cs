@@ -146,13 +146,14 @@ namespace NeuralNetwork.Structure.Nodes
         public void ConnectTo(ISynapse connectionElement)
         {
             _summator.ConnectTo(connectionElement);
-
-            //TODO: Use summator
         }
 
-        private Task _calculate(ISummator summator, double value)
+        private async Task _calculate(ISummator summator, double value)
         {
-            return Task.FromResult(_actFunction.GetEquation(value));
+            var result = _actFunction.GetEquation(value);
+
+            if (OnResultCalculated != null)
+                await OnResultCalculated(this, result);
         }
 
         [OnDeserializing]

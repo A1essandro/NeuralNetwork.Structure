@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 
 namespace NeuralNetwork.Structure.Common
 {
-    public interface INumberConductor<out T>
-        where T : INumberConductor<T>
+    public interface INumberConductor<out TThis>
+        where TThis : INumberConductor<TThis>
     {
 
-        event Func<T, double, Task> OnResultCalculated;
+        event Func<TThis, double, Task> OnResultCalculated;
 
     }
 }

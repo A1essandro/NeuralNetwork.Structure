@@ -13,7 +13,7 @@ namespace NeuralNetwork.Structure.Tests
         [InlineData(0, 0, 0)]
         [InlineData(1, 2, 3)]
         [InlineData(-1, 2, -3)]
-        public void TestSimpleFunction(double v1, double v2, double v3)
+        public void TestEvents(double v1, double v2, double v3)
         {
             var synapse1 = new Mock<ISynapse>();
             var synapse2 = new Mock<ISynapse>();

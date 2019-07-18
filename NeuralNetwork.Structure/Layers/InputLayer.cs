@@ -27,8 +27,8 @@ namespace NeuralNetwork.Structure.Layers
         {
         }
 
-        public InputLayer(Func<IMasterNode> getter, int qty, params IMasterNode[] other)
-            : base(getter, qty, other)
+        public InputLayer(Func<IMasterNode> factory, int qty, params IMasterNode[] other)
+            : base(factory, qty, other)
         {
         }
 

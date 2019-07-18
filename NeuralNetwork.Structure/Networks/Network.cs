@@ -28,6 +28,9 @@ namespace NeuralNetwork.Structure.Networks
         [DataMember]
         private IReadOnlyLayer<INotInputNode> _outputLayer;
 
+        private IDictionary<INode, int> _outputPositions;
+        private double[] _output;
+
         #endregion
 
         private SemaphoreSlim _processingLocker = new SemaphoreSlim(1, 1);
@@ -54,6 +57,16 @@ namespace NeuralNetwork.Structure.Networks
             {
                 _outputLayer = value;
                 _outputLayer.AttachTo(this);
+
+                var nodesQty = _outputLayer.Nodes.Count();
+                _outputPositions = new Dictionary<INode, int>();
+                _output = new double[nodesQty];
+                var i = 0;
+                foreach(var node in _outputLayer.Nodes)
+                {
+                    _outputPositions.Add(node, i);
+                    node.OnResultCalculated += _processOutput;
+                }
             }
         }
 
@@ -103,16 +116,7 @@ namespace NeuralNetwork.Structure.Networks
 
         public virtual async Task<IEnumerable<double>> Output()
         {
-            try
-            {
-                await _processingLocker.WaitAsync();
-
-                return await _processOutput();
-            }
-            finally
-            {
-                _processingLocker.Release();
-            }
+            return await Task.FromResult(_output);
         }
 
         protected virtual T GetClone<T>() where T : Network
@@ -133,6 +137,15 @@ namespace NeuralNetwork.Structure.Networks
             return network.GetClone<T>();
         }
 
+        public IMultilayerNetwork AddInnerLayer(ILayer<INotInputNode> layer)
+        {
+            _innerLayers.Add(layer);
+
+            layer.AttachTo(this);
+
+            return this;
+        }
+
         #region private methods
 
         private async Task _processInput(IEnumerable<double> input)
@@ -140,17 +153,21 @@ namespace NeuralNetwork.Structure.Networks
             if (OnInput != null)
                 await OnInput(this, input);
 
-            _inputToNodes(input);
+            await _inputToNodes(input);
         }
 
-        private void _inputToNodes(IEnumerable<double> input)
+        private Task _inputToNodes(IEnumerable<double> input)
         {
             var inputNodes = _inputLayer.Nodes.OfType<IInputNode>().ToArray();
+            var taskList = new List<Task>(inputNodes.Length);
+
             var index = 0;
             foreach (var value in input)
             {
-                inputNodes[index++].Input(value);
+                taskList.Add(inputNodes[index++].Input(value));
             }
+
+            return Task.WhenAll(taskList);
         }
 
         private async Task<IEnumerable<double>> _processOutput()
@@ -162,13 +179,12 @@ namespace NeuralNetwork.Structure.Networks
             return result;
         }
 
-        public IMultilayerNetwork AddInnerLayer(ILayer<INotInputNode> layer)
+        private Task _processOutput(INode node, double value)
         {
-            _innerLayers.Add(layer);
+            var position = _outputPositions[node];
+            _output[position] = value;
 
-            layer.AttachTo(this);
-
-            return this;
+            return Task.CompletedTask;
         }
 
         #endregion
