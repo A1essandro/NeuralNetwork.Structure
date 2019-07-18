@@ -1,18 +1,18 @@
 ﻿using NeuralNetwork.Structure.Nodes;
 using NeuralNetwork.Structure.Synapses;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace NeuralNetwork.Structure.Summators
 {
 
-    public class EuclidRangeSummator : ISummator
+    public class EuclidRangeSummator : Summator
     {
 
-        public event Func<ISummator, double, Task> OnResultCalculated;
-
-        public Task<double> GetSum(ISlaveNode node) => GetEuclidRange(node);
+        [Obsolete]
+        public override Task<double> GetSum(ISlaveNode node) => GetEuclidRange(node);
 
         public async static Task<double> GetEuclidRange(ISlaveNode node)
         {
@@ -31,9 +31,7 @@ namespace NeuralNetwork.Structure.Summators
             return Math.Pow(output - synapse.Weight, 2);
         }
 
-        public void ConnectTo(ISynapse connectionElement)
-        {
-            throw new NotImplementedException();
-        }
+        protected override double Calculate(ICollection<double> values) => Math.Sqrt(values.Sum());
+
     }
 }

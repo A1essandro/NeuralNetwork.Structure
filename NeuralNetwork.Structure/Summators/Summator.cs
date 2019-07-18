@@ -2,6 +2,7 @@
 using NeuralNetwork.Structure.Synapses;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -15,9 +16,9 @@ namespace NeuralNetwork.Structure.Summators
 
         private ConcurrentDictionary<ISynapse, double> _memory = new ConcurrentDictionary<ISynapse, double>();
 
-        public event Func<ISummator, double, Task> OnResultCalculated;
+        public virtual event Func<ISummator, double, Task> OnResultCalculated;
 
-        public void ConnectTo(ISynapse connectionElement)
+        public virtual void ConnectTo(ISynapse connectionElement)
         {
             connectionElement.OnResultCalculated += _retain;
 
@@ -25,7 +26,7 @@ namespace NeuralNetwork.Structure.Summators
         }
 
         [Obsolete]
-        public async Task<double> GetSum(ISlaveNode node)
+        public virtual async Task<double> GetSum(ISlaveNode node)
         {
             var tasks = node.Synapses.Select(x => x.Output());
             var tasksResult = await Task.WhenAll(tasks).ConfigureAwait(false);
@@ -41,7 +42,9 @@ namespace NeuralNetwork.Structure.Summators
             if (_memory.Values.All(x => !double.IsNaN(x)))
             {
                 if (OnResultCalculated != null)
-                    await OnResultCalculated(this, _memory.Values.Sum());
+                {
+                    await Notify(Calculate(_memory.Values));
+                }
 
                 foreach (var key in _memory.Keys)
                 {
@@ -49,6 +52,10 @@ namespace NeuralNetwork.Structure.Summators
                 }
             }
         }
+
+        protected virtual double Calculate(ICollection<double> values) => values.Sum();
+
+        private Task Notify(double value) => OnResultCalculated(this, value);
 
     }
 }
