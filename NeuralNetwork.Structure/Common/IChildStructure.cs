@@ -4,7 +4,7 @@
     public interface IChildStructure<in TParentStructure>
     {
 
-        void AttachTo(TParentStructure parentStructure);
+        void InsertInto(TParentStructure parentStructure);
 
     }
 

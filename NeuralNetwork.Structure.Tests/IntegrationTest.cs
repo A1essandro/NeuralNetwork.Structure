@@ -26,6 +26,7 @@ namespace NeuralNetwork.Structure.Tests
             network.OutputLayer = new Layer(output);
 
             var synapse = new Synapse(input, output, synapseWeight);
+            network.AddSynapse(synapse);
 
             var outputCalculatedValue = double.NaN;
             var raised = false;

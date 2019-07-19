@@ -45,11 +45,6 @@ namespace NeuralNetwork.Structure.Synapses
             Weight += delta;
         }
 
-        [Obsolete]
-        public Synapse()
-        {
-        }
-
         public Synapse(INode masterNode, ISlaveNode slaveNode, double weight)
         {
             Contract.Requires(masterNode != null, nameof(masterNode));
@@ -59,7 +54,6 @@ namespace NeuralNetwork.Structure.Synapses
             Weight = weight;
 
             ConnectTo(masterNode);
-            slaveNode.ConnectTo(this);
         }
 
         public virtual void ConnectTo(INode connectionElement)
@@ -69,8 +63,9 @@ namespace NeuralNetwork.Structure.Synapses
             MasterNode.OnResultCalculated += _conductData;
         }
 
-        public void AttachTo(ISimpleNetwork parentStructure)
+        public void InsertInto(ISimpleNetwork parentStructure)
         {
+            SlaveNode.ConnectTo(this);
         }
 
         #region private methods

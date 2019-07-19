@@ -12,7 +12,7 @@ namespace NeuralNetwork.Structure.Nodes
 
         private const double VALUE = 1.0;
 
-        public void AttachTo(IReadOnlyLayer<INode> layer)
+        public void InsertInto(IReadOnlyLayer<INode> layer)
         {
             layer.OnNetworkInput += _onNetworkInputHandler;
         }

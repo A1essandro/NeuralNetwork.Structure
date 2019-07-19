@@ -44,7 +44,7 @@ namespace NeuralNetwork.Structure.Tests
             var result = double.NaN;
             bias.OnResultCalculated += (s, v) => { result = v; return Task.CompletedTask; };
 
-            bias.AttachTo(layer.Object);
+            bias.InsertInto(layer.Object);
             layer.Raise(x => x.OnNetworkInput += null, layer.Object, new double[] { 0 });
 
             Assert.Equal(1, result);
@@ -63,7 +63,8 @@ namespace NeuralNetwork.Structure.Tests
             func.Setup(x => x.GetEquation(It.IsAny<double>()))
                 .Returns<double>(x => x);
 
-            var neuron = new Neuron(func.Object, new[] { synapse.Object });
+            var neuron = new Neuron(func.Object);
+            neuron.ConnectTo(synapse.Object);
 
             var result = double.NaN;
             neuron.OnResultCalculated += (s, v) => { result = v; return Task.CompletedTask; };
@@ -83,7 +84,7 @@ namespace NeuralNetwork.Structure.Tests
             var synapse = new Mock<ISynapse>();
 
             var context = new Context(delay: 1);
-            context.AddSynapse(synapse.Object);
+            context.ConnectTo(synapse.Object);
 
             var results = new List<double>();
             context.OnResultCalculated += (s, v) =>

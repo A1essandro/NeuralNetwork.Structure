@@ -4,7 +4,6 @@ using NeuralNetwork.Structure.Summators;
 using NeuralNetwork.Structure.Synapses;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -40,11 +39,6 @@ namespace NeuralNetwork.Structure.Nodes
         protected static ISummator DefaultSummator => new Summator();
 
         #region public properties
-
-        /// <summary>
-        /// Collection of synapses to this node
-        /// </summary>
-        public ICollection<ISynapse> Synapses => _synapses;
 
         public virtual ISummator Summator
         {
@@ -82,35 +76,9 @@ namespace NeuralNetwork.Structure.Nodes
             Summator = summator ?? DefaultSummator;
         }
 
-        public Neuron(IActivationFunction function, ICollection<ISynapse> synapses)
-            : this(function)
-        {
-            foreach (var synapse in synapses)
-                AddSynapse(synapse);
-        }
-
-        public Neuron(IActivationFunction function, ICollection<ISynapse> synapses, ISummator summator)
-            : this(function)
-        {
-            _synapses = synapses;
-            Summator = summator;
-        }
-
         #endregion
 
-        /// <summary>
-        /// Adding synapse from master node to this node
-        /// </summary>
-        /// <param name="synapse"></param>
-        public virtual void AddSynapse(ISynapse synapse)
-        {
-            Contract.Requires(synapse != null, nameof(synapse));
-
-            _synapses.Add(synapse);
-            ConnectTo(synapse);
-        }
-
-        public virtual void AttachTo(IReadOnlyLayer<INode> layer)
+        public virtual void InsertInto(IReadOnlyLayer<INode> layer)
         {
         }
 

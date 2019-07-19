@@ -1,6 +1,7 @@
 ﻿using NeuralNetwork.Structure.Common;
 using NeuralNetwork.Structure.Layers;
 using NeuralNetwork.Structure.Nodes;
+using NeuralNetwork.Structure.Synapses;
 using System.Collections.Generic;
 
 namespace NeuralNetwork.Structure.Networks
@@ -12,6 +13,10 @@ namespace NeuralNetwork.Structure.Networks
         IReadOnlyLayer<IMasterNode> InputLayer { get; set; }
 
         IReadOnlyLayer<INotInputNode> OutputLayer { get; set; }
+
+        ICollection<ISynapse> Synapses { get; }
+
+        void AddSynapse(ISynapse synapse);
 
     }
 

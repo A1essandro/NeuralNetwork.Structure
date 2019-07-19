@@ -1,6 +1,7 @@
 ﻿using NeuralNetwork.Structure.Common;
 using NeuralNetwork.Structure.Layers;
 using NeuralNetwork.Structure.Nodes;
+using NeuralNetwork.Structure.Synapses;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -27,6 +28,8 @@ namespace NeuralNetwork.Structure.Networks
         private IReadOnlyLayer<IMasterNode> _inputLayer;
         [DataMember]
         private IReadOnlyLayer<INotInputNode> _outputLayer;
+        [DataMember]
+        private readonly ICollection<ISynapse> _synapses = new List<ISynapse>();
 
         private IDictionary<INode, int> _outputPositions;
         private double[] _output;
@@ -53,7 +56,7 @@ namespace NeuralNetwork.Structure.Networks
             set
             {
                 _inputLayer = value;
-                _inputLayer.AttachTo(this);
+                _inputLayer.InsertInto(this);
             }
         }
 
@@ -65,7 +68,7 @@ namespace NeuralNetwork.Structure.Networks
             set
             {
                 _outputLayer = value;
-                _outputLayer.AttachTo(this);
+                _outputLayer.InsertInto(this);
 
                 var nodesQty = _outputLayer.Nodes.Count();
                 _outputPositions = new Dictionary<INode, int>();
@@ -78,6 +81,8 @@ namespace NeuralNetwork.Structure.Networks
                 }
             }
         }
+
+        public virtual ICollection<ISynapse> Synapses => _synapses;
 
         #endregion
 
@@ -166,9 +171,18 @@ namespace NeuralNetwork.Structure.Networks
         {
             _innerLayers.Add(layer);
 
-            layer.AttachTo(this);
+            layer.InsertInto(this);
 
             return this;
+        }
+
+        public void AddSynapse(ISynapse synapse)
+        {
+            Contract.Requires(synapse != null, nameof(synapse));
+
+            _synapses.Add(synapse);
+
+            synapse.InsertInto(this);
         }
 
         #region private methods

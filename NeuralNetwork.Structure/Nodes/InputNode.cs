@@ -15,7 +15,7 @@ namespace NeuralNetwork.Structure.Nodes
 
         public event Func<INode, double, Task> OnResultCalculated;
 
-        public virtual void AttachTo(IReadOnlyLayer<INode> layer)
+        public virtual void InsertInto(IReadOnlyLayer<INode> layer)
         {
         }
 

@@ -32,7 +32,7 @@ namespace NeuralNetwork.Structure.Nodes
         /// <param name="synapses"><see cref="Synapses"/> Create empty list if null</param>
         /// <param name="summator"></param>
         public Context(IActivationFunction function = null, ushort delay = 1, ICollection<ISynapse> synapses = null, ISummator summator = null)
-            : base(function ?? DefaultActivationFunction, synapses ?? new List<ISynapse>(), summator ?? DefaultSummator)
+            : base(function ?? DefaultActivationFunction, summator ?? DefaultSummator)
         {
             _memory = new Queue<double>(Enumerable.Repeat(0.0, delay));
             Delay = delay;
