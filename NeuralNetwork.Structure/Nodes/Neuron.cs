@@ -38,9 +38,10 @@ namespace NeuralNetwork.Structure.Nodes
 
         protected static IActivationFunction DefaultActivationFunction = new AsIs();
 
-        protected static ISummator DefaultSummator = new Summator();
+        protected static ISummator DefaultSummator => new Summator();
 
         private double? _calculatedOutput;
+
 
         private AutoResetEvent _waitHandle = new AutoResetEvent(true);
 
