@@ -35,9 +35,17 @@ namespace NeuralNetwork.Structure.Networks
 
         private SemaphoreSlim _processingLocker = new SemaphoreSlim(1, 1);
 
+        #region Events
+
         public event Action<IEnumerable<double>> OnOutput;
 
         public event Func<IInput<IEnumerable<double>>, IEnumerable<double>, Task> OnInput;
+
+        public event Func<ISimpleNetwork, IEnumerable<double>, Task> OnResultCalculated;
+
+        #endregion
+
+        #region Public properties
 
         public virtual IReadOnlyLayer<IMasterNode> InputLayer
         {
@@ -70,6 +78,8 @@ namespace NeuralNetwork.Structure.Networks
                 }
             }
         }
+
+        #endregion
 
         #region ctors
 
@@ -108,6 +118,9 @@ namespace NeuralNetwork.Structure.Networks
                 await _processingLocker.WaitAsync();
 
                 await _processInput(input);
+
+                if (OnResultCalculated != null)
+                    await OnResultCalculated(this, _output);
             }
             finally
             {
@@ -117,9 +130,18 @@ namespace NeuralNetwork.Structure.Networks
 
         public virtual async Task<IEnumerable<double>> Output()
         {
-            OnOutput?.Invoke(_output);
+            try
+            {
+                await _processingLocker.WaitAsync();
 
-            return await Task.FromResult(_output);
+                OnOutput?.Invoke(_output);
+
+                return _output;
+            }
+            finally
+            {
+                _processingLocker.Release();
+            }
         }
 
         protected virtual T GetClone<T>() where T : Network

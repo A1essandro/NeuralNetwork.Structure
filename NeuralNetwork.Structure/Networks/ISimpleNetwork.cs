@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace NeuralNetwork.Structure.Networks
 {
 
-    public interface ISimpleNetwork : IInput<IEnumerable<double>>, IOutput<IEnumerable<double>>
+    public interface ISimpleNetwork : IInput<IEnumerable<double>>, IOutput<IEnumerable<double>>, IDataConductor<ISimpleNetwork, IEnumerable<double>>
     {
 
         IReadOnlyLayer<IMasterNode> InputLayer { get; set; }

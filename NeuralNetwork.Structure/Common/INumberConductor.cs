@@ -1,13 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace NeuralNetwork.Structure.Common
+﻿namespace NeuralNetwork.Structure.Common
 {
-    public interface INumberConductor<out TThis>
-        where TThis : INumberConductor<TThis>
+    public interface INumberConductor<out TThis> : IDataConductor<TThis, double>
+        where TThis : IDataConductor<TThis, double>
     {
-
-        event Func<TThis, double, Task> OnResultCalculated;
 
     }
 }

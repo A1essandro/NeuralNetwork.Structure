@@ -36,9 +36,17 @@ namespace NeuralNetwork.Structure.Tests
                 return Task.CompletedTask;
             };
 
+            var networkResultFirstNode = double.NaN;
+            network.OnResultCalculated += (n, v) =>
+            {
+                networkResultFirstNode = v.First();
+                return Task.CompletedTask;
+            };
+
             await network.Input(new[] { 1.0 });
 
             Assert.True(raised);
+            Assert.Equal(synapseWeight, networkResultFirstNode);
             Assert.Equal(synapseWeight, outputCalculatedValue);
             Assert.Equal(synapseWeight, (await network.Output()).First());
         }
