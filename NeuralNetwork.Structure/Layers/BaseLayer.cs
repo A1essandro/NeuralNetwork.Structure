@@ -25,6 +25,8 @@ namespace NeuralNetwork.Structure.Layers
 
         public int NodesQuantity => NodeList.Count;
 
+        #region ctors
+
         public BaseLayer()
         {
         }
@@ -56,6 +58,8 @@ namespace NeuralNetwork.Structure.Layers
             }
         }
 
+        #endregion
+
         public void AddNode(TNode node)
         {
             Contract.Assert(node != null, nameof(node));
@@ -74,13 +78,14 @@ namespace NeuralNetwork.Structure.Layers
 
         public virtual void AttachTo(ISimpleNetwork network)
         {
-            network.OnInput += _onNetworkInputHandler;
+            network.OnInput += OnNetworkInputHandler;
         }
 
-        private async Task _onNetworkInputHandler(IInput<IEnumerable<double>> network, IEnumerable<double> input)
+        protected virtual async Task OnNetworkInputHandler(IInput<IEnumerable<double>> network, IEnumerable<double> input)
         {
             if (OnNetworkInput != null)
                 await OnNetworkInput(this, input);
         }
+
     }
 }

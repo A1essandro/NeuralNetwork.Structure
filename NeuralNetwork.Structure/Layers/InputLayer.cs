@@ -1,5 +1,4 @@
 ﻿using NeuralNetwork.Structure.Common;
-using NeuralNetwork.Structure.Networks;
 using NeuralNetwork.Structure.Nodes;
 using System;
 using System.Collections.Generic;
@@ -49,16 +48,7 @@ namespace NeuralNetwork.Structure.Layers
             }
         }
 
-        public override void AttachTo(ISimpleNetwork network)
-        {
-            base.AttachTo(network);
-        }
-
         private static Type[] GetKnownType() => new Type[] { typeof(BaseLayer<IMasterNode>) };
 
-        Task IInput<IEnumerable<double>>.Input(IEnumerable<double> input)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -11,9 +11,6 @@ namespace NeuralNetwork.Structure.Nodes
     public class InputNode : IInputNode
     {
 
-        [DataMember]
-        private double _data;
-
         public event Func<IInput<double>, double, Task> OnInput;
 
         public event Func<INode, double, Task> OnResultCalculated;
@@ -26,8 +23,6 @@ namespace NeuralNetwork.Structure.Nodes
         {
             if (OnInput != null)
                 await OnInput(this, input);
-
-            _data = input;
 
             if (OnResultCalculated != null)
                 await OnResultCalculated(this, input);
