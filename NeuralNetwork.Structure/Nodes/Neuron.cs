@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace NeuralNetwork.Structure.Nodes
@@ -41,9 +40,6 @@ namespace NeuralNetwork.Structure.Nodes
         protected static ISummator DefaultSummator => new Summator();
 
         private double? _calculatedOutput;
-
-
-        private AutoResetEvent _waitHandle = new AutoResetEvent(true);
 
         #region public properties
 
@@ -104,17 +100,14 @@ namespace NeuralNetwork.Structure.Nodes
 
         public virtual async Task<double> Output()
         {
-            _waitHandle.WaitOne();
             if (_calculatedOutput != null)
             {
-                _waitHandle.Set();
                 OnOutput?.Invoke(_calculatedOutput.Value);
                 return _calculatedOutput.Value;
             }
 
             var sum = await _summator.GetSum(this);
             _calculatedOutput = _actFunction.GetEquation(sum);
-            _waitHandle.Set();
 
             OnOutput?.Invoke(_calculatedOutput.Value);
 
@@ -155,12 +148,6 @@ namespace NeuralNetwork.Structure.Nodes
 
             if (OnResultCalculated != null)
                 await OnResultCalculated(this, result);
-        }
-
-        [OnDeserializing]
-        private void Deserialize(StreamingContext ctx)
-        {
-            _waitHandle = new AutoResetEvent(true);
         }
 
     }
