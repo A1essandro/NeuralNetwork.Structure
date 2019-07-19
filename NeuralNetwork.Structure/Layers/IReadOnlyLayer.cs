@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace NeuralNetwork.Structure.Layers
 {
 
-    public interface IReadOnlyLayer<out TNode> : IOutput<IEnumerable<double>>, IChildStructure<ISimpleNetwork>
+    public interface IReadOnlyLayer<out TNode> : IChildStructure<ISimpleNetwork>
         where TNode : INode
     {
 

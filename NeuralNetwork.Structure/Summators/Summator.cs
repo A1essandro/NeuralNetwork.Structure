@@ -1,5 +1,4 @@
-﻿using NeuralNetwork.Structure.Nodes;
-using NeuralNetwork.Structure.Synapses;
+﻿using NeuralNetwork.Structure.Synapses;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -23,15 +22,6 @@ namespace NeuralNetwork.Structure.Summators
             connectionElement.OnResultCalculated += _retain;
 
             _memory.TryAdd(connectionElement, double.NaN);
-        }
-
-        [Obsolete]
-        public virtual async Task<double> GetSum(ISlaveNode node)
-        {
-            var tasks = node.Synapses.Select(x => x.Output());
-            var tasksResult = await Task.WhenAll(tasks).ConfigureAwait(false);
-
-            return tasksResult.Sum();
         }
 
         //TODO: need optimization

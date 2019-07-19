@@ -1,6 +1,7 @@
 ﻿using NeuralNetwork.Structure.ActivationFunctions;
 using NeuralNetwork.Structure.Summators;
 using NeuralNetwork.Structure.Synapses;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,9 +15,9 @@ namespace NeuralNetwork.Structure.Nodes
     public class Context : Neuron
     {
 
-        private readonly Queue<double> _memory;
+        public override event Func<INode, double, Task> OnResultCalculated;
 
-        private double _currentValue;
+        private readonly Queue<double> _memory;
 
         /// <summary>
         /// Delay between input and appropriate output
@@ -31,22 +32,20 @@ namespace NeuralNetwork.Structure.Nodes
         /// <param name="synapses"><see cref="Synapses"/> Create empty list if null</param>
         /// <param name="summator"></param>
         public Context(IActivationFunction function = null, ushort delay = 1, ICollection<ISynapse> synapses = null, ISummator summator = null)
-            : base(function ?? Neuron.DefaultActivationFunction, synapses ?? new List<ISynapse>(), summator ?? Neuron.DefaultSummator)
+            : base(function ?? DefaultActivationFunction, synapses ?? new List<ISynapse>(), summator ?? DefaultSummator)
         {
             _memory = new Queue<double>(Enumerable.Repeat(0.0, delay));
             Delay = delay;
         }
 
-        /// <summary>
-        /// Calculates output with delay <see cref="Delay"/>
-        /// </summary>
-        /// <returns></returns>
-        public override async Task<double> Output()
+        protected override async Task Calculate(ISummator summator, double value)
         {
-            _memory.Enqueue(await base.Output());
-            _currentValue = _memory.Dequeue();
+            var result = Function.GetEquation(value);
 
-            return _currentValue;
+            _memory.Enqueue(result);
+
+            if (OnResultCalculated != null)
+                await OnResultCalculated(this, _memory.Dequeue());
         }
 
     }

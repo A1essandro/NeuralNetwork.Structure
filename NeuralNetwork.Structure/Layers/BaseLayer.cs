@@ -19,8 +19,6 @@ namespace NeuralNetwork.Structure.Layers
         [DataMember]
         protected List<TNode> NodeList = new List<TNode>();
 
-        public event Action<IEnumerable<double>> OnOutput;
-
         public event Func<IReadOnlyLayer<TNode>, IEnumerable<double>, Task> OnNetworkInput;
 
         public IEnumerable<TNode> Nodes => NodeList.AsReadOnly();
@@ -72,16 +70,6 @@ namespace NeuralNetwork.Structure.Layers
             Contract.Assert(node != null, nameof(node));
 
             return NodeList.Remove(node);
-        }
-
-        public async Task<IEnumerable<double>> Output()
-        {
-            var result = await Task.WhenAll(Nodes.Select(n => n.Output())).ConfigureAwait(false);
-
-            if (OnOutput != null)
-                OnOutput.Invoke(result);
-
-            return result;
         }
 
         public virtual void AttachTo(ISimpleNetwork network)

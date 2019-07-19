@@ -34,8 +34,6 @@ namespace NeuralNetwork.Structure.Synapses
         [DataMember]
         public double Weight { get; set; }
 
-        public event Action<double> OnOutput;
-
         public event Func<ISynapse, double, Task> OnResultCalculated;
 
         /// <summary>
@@ -45,15 +43,6 @@ namespace NeuralNetwork.Structure.Synapses
         public void ChangeWeight(double delta)
         {
             Weight += delta;
-        }
-
-        [Obsolete]
-        public async Task<double> Output()
-        {
-            var result = _calculate(await MasterNode.Output());
-            OnOutput?.Invoke(result);
-
-            return result;
         }
 
         [Obsolete]

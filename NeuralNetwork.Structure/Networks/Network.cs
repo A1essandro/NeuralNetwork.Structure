@@ -36,6 +36,7 @@ namespace NeuralNetwork.Structure.Networks
         private SemaphoreSlim _processingLocker = new SemaphoreSlim(1, 1);
 
         public event Action<IEnumerable<double>> OnOutput;
+
         public event Func<IInput<IEnumerable<double>>, IEnumerable<double>, Task> OnInput;
 
         public virtual IReadOnlyLayer<IMasterNode> InputLayer
@@ -62,7 +63,7 @@ namespace NeuralNetwork.Structure.Networks
                 _outputPositions = new Dictionary<INode, int>();
                 _output = new double[nodesQty];
                 var i = 0;
-                foreach(var node in _outputLayer.Nodes)
+                foreach (var node in _outputLayer.Nodes)
                 {
                     _outputPositions.Add(node, i);
                     node.OnResultCalculated += _processOutput;
@@ -116,6 +117,8 @@ namespace NeuralNetwork.Structure.Networks
 
         public virtual async Task<IEnumerable<double>> Output()
         {
+            OnOutput?.Invoke(_output);
+
             return await Task.FromResult(_output);
         }
 
@@ -168,15 +171,6 @@ namespace NeuralNetwork.Structure.Networks
             }
 
             return Task.WhenAll(taskList);
-        }
-
-        private async Task<IEnumerable<double>> _processOutput()
-        {
-            var result = await OutputLayer.Output().ConfigureAwait(false);
-
-            OnOutput?.Invoke(result);
-
-            return result;
         }
 
         private Task _processOutput(INode node, double value)

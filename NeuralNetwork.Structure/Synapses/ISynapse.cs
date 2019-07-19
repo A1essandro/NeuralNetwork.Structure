@@ -9,7 +9,7 @@ namespace NeuralNetwork.Structure.Synapses
     /// Synapse gets output from neuron-transmitter and convert the value via its weight.
     /// Result value gets neuron-reciever.
     /// </summary>
-    public interface ISynapse : IOutput<double>, INumberConductor<ISynapse>, IConnectedElement<INode>, IChildStructure<ISimpleNetwork>
+    public interface ISynapse : INumberConductor<ISynapse>, IConnectedElement<INode>, IChildStructure<ISimpleNetwork>
     {
 
         /// <summary>

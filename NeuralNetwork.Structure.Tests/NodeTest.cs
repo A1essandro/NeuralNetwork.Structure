@@ -1,9 +1,10 @@
 ﻿using Moq;
 using NeuralNetwork.Structure.ActivationFunctions;
+using NeuralNetwork.Structure.Layers;
 using NeuralNetwork.Structure.Nodes;
 using NeuralNetwork.Structure.Synapses;
-using System;
-using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -13,78 +14,89 @@ namespace NeuralNetwork.Structure.Tests
     public class NodeTest
     {
 
-        private static Random Random => new Random();
-
-        [Fact]
-        public async Task TestInputNode()
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(0.5)]
+        [InlineData(0)]
+        [InlineData(1)]
+        public async Task TestInputNode(double value)
         {
             var node = new InputNode();
-            var value = Random.NextDouble();
 
-            node.OnInput += (n, result) => { return Task.CompletedTask; };
-            node.OnInput += (n, result) => { return Task.CompletedTask; };
-            node.OnInput += (n, result) => { return Task.CompletedTask; };
+            var onInputRaised = false;
+            node.OnInput += (n, r) => { onInputRaised = true; return Task.CompletedTask; };
+
+            var result = double.NaN;
+            node.OnResultCalculated += (s, v) => { result = v; return Task.CompletedTask; };
 
             await node.Input(value);
 
-            Assert.Equal(value, await node.Output());
+            Assert.True(onInputRaised);
+            Assert.Equal(value, result);
         }
 
         [Fact]
-        public async Task TestBias()
+        public void TestBias()
         {
-            Assert.Equal(1, await new Bias().Output());
+            var bias = new Bias();
+            var layer = new Mock<IReadOnlyLayer<INode>>();
+
+            var result = double.NaN;
+            bias.OnResultCalculated += (s, v) => { result = v; return Task.CompletedTask; };
+
+            bias.AttachTo(layer.Object);
+            layer.Raise(x => x.OnNetworkInput += null, layer.Object, new double[] { 0 });
+
+            Assert.Equal(1, result);
         }
 
-        [Fact]
-        public async Task TestNeuron()
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(0.5)]
+        [InlineData(0)]
+        [InlineData(1)]
+        public void TestNeuron(double value)
         {
             var synapse = new Mock<ISynapse>();
-            synapse.Setup(x => x.Output()).ReturnsAsync(0.5);
 
             var func = new Mock<IActivationFunction>();
             func.Setup(x => x.GetEquation(It.IsAny<double>()))
                 .Returns<double>(x => x);
 
             var neuron = new Neuron(func.Object, new[] { synapse.Object });
-            Assert.Equal(0.5, await neuron.Output());
+
+            var result = double.NaN;
+            neuron.OnResultCalculated += (s, v) => { result = v; return Task.CompletedTask; };
+
+            synapse.Raise(x => x.OnResultCalculated += null, synapse.Object, value);
+
+            Assert.Equal(value, result);
         }
 
-        [Fact]
-        public async Task TestContext()
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(0.5)]
+        [InlineData(0)]
+        [InlineData(1)]
+        public void TestContext(double value)
         {
             var synapse = new Mock<ISynapse>();
-            synapse.Setup(x => x.Output()).ReturnsAsync(0.5);
 
             var context = new Context(delay: 1);
             context.AddSynapse(synapse.Object);
 
-            var secondCallResult = await synapse.Object.Output();
-            Assert.Equal(0, await context.Output());
-            Assert.Equal(secondCallResult, await context.Output());
-        }
+            var results = new List<double>();
+            context.OnResultCalculated += (s, v) =>
+            {
+                results.Add(v);
+                return Task.CompletedTask;
+            };
 
-        [Fact]
-        public async Task TestEvents()
-        {
-            var neuron = new Neuron();
-            var inputNeuron = new InputNode();
-            neuron.AddSynapse(new Synapse(inputNeuron, neuron, 1));
+            synapse.Raise(x => x.OnResultCalculated += null, synapse.Object, value);
+            synapse.Raise(x => x.OnResultCalculated += null, synapse.Object, value);
 
-            var output = 0;
-            var input = 0;
-
-            inputNeuron.OnOutput += (result) => { Interlocked.Increment(ref output); };
-            neuron.OnOutput += (result) => { Interlocked.Increment(ref output); };
-            neuron.OnOutput += (result) => { Interlocked.Increment(ref output); };
-            inputNeuron.OnInput += (n, result) => { Interlocked.Increment(ref input); return Task.CompletedTask; };
-            inputNeuron.OnInput += (n, result) => { Interlocked.Increment(ref input); return Task.CompletedTask; };
-
-            await inputNeuron.Input(1);
-            await neuron.Output();
-
-            Assert.True(output > 0);
-            Assert.True(input > 0);
+            Assert.Equal(0.0, results.First());
+            Assert.Equal(value, results.Last());
         }
 
     }

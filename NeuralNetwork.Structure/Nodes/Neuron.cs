@@ -28,7 +28,7 @@ namespace NeuralNetwork.Structure.Nodes
         private readonly ICollection<ISynapse> _synapses = new List<ISynapse>();
 
         [DataMember]
-        private ISummator _summator;
+        protected ISummator _summator;
 
         [DataMember]
         private IActivationFunction _actFunction;
@@ -39,8 +39,6 @@ namespace NeuralNetwork.Structure.Nodes
 
         protected static ISummator DefaultSummator => new Summator();
 
-        private double? _calculatedOutput;
-
         #region public properties
 
         /// <summary>
@@ -48,10 +46,17 @@ namespace NeuralNetwork.Structure.Nodes
         /// </summary>
         public ICollection<ISynapse> Synapses => _synapses;
 
-        public ISummator Summator
+        public virtual ISummator Summator
         {
             get => _summator;
-            set => _summator = value;
+            set
+            {
+                if (_summator != null)
+                    _summator.OnResultCalculated -= Calculate;
+
+                _summator = value;
+                _summator.OnResultCalculated += Calculate;
+            }
         }
 
         public IActivationFunction Function
@@ -62,9 +67,7 @@ namespace NeuralNetwork.Structure.Nodes
 
         #endregion
 
-        public event Action<double> OnOutput;
-
-        public event Func<INode, double, Task> OnResultCalculated;
+        public virtual event Func<INode, double, Task> OnResultCalculated;
 
         #region ctors
 
@@ -76,42 +79,21 @@ namespace NeuralNetwork.Structure.Nodes
         public Neuron(IActivationFunction function, ISummator summator = null)
         {
             _actFunction = function;
-            _summator = summator ?? DefaultSummator;
-            _summator.OnResultCalculated += _calculate;
+            Summator = summator ?? DefaultSummator;
         }
 
         public Neuron(IActivationFunction function, ICollection<ISynapse> synapses)
             : this(function)
         {
-            _synapses = synapses;
+            foreach (var synapse in synapses)
+                AddSynapse(synapse);
         }
 
         public Neuron(IActivationFunction function, ICollection<ISynapse> synapses, ISummator summator)
             : this(function)
         {
             _synapses = synapses;
-            _summator = summator;
-            _summator.OnResultCalculated += _calculate;
-        }
-
-        #endregion
-
-        #region IOutput
-
-        public virtual async Task<double> Output()
-        {
-            if (_calculatedOutput != null)
-            {
-                OnOutput?.Invoke(_calculatedOutput.Value);
-                return _calculatedOutput.Value;
-            }
-
-            var sum = await _summator.GetSum(this);
-            _calculatedOutput = _actFunction.GetEquation(sum);
-
-            OnOutput?.Invoke(_calculatedOutput.Value);
-
-            return _calculatedOutput.Value;
+            Summator = summator;
         }
 
         #endregion
@@ -125,24 +107,19 @@ namespace NeuralNetwork.Structure.Nodes
             Contract.Requires(synapse != null, nameof(synapse));
 
             _synapses.Add(synapse);
-
-            synapse.OnResultCalculated += async (s, data) =>
-            {
-                if (OnResultCalculated != null)
-                    await OnResultCalculated(this, await Output());
-            };
+            ConnectTo(synapse);
         }
 
         public virtual void AttachTo(IReadOnlyLayer<INode> layer)
         {
         }
 
-        public void ConnectTo(ISynapse connectionElement)
+        public virtual void ConnectTo(ISynapse connectionElement)
         {
             _summator.ConnectTo(connectionElement);
         }
 
-        private async Task _calculate(ISummator summator, double value)
+        protected virtual async Task Calculate(ISummator summator, double value)
         {
             var result = _actFunction.GetEquation(value);
 
