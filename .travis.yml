@@ -11,7 +11,7 @@ env:
 
 script:
     - dotnet build NeuralNetwork.Structure.sln -c Release
-    - dotnet test -c Release --no-build Tests/Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+    - dotnet test -c Release --no-build NeuralNetwork.Structure.Tests/NeuralNetwork.Structure.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 
 after_script:
     - bash <(curl -s https://codecov.io/bash)
