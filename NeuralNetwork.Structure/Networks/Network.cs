@@ -109,21 +109,6 @@ namespace NeuralNetwork.Structure.Networks
             _innerLayers = new List<IReadOnlyLayer<INotInputNode>>();
         }
 
-        public Network(IReadOnlyLayer<IMasterNode> inputLayer, ICollection<IReadOnlyLayer<INotInputNode>> layers)
-        {
-            Contract.Requires(layers != null, nameof(layers));
-            Contract.Requires(layers.Count >= 1, nameof(layers));
-            Contract.Requires(inputLayer.Nodes.Any(n => n is IInputNode));
-
-            _inputLayer = inputLayer;
-            _innerLayers = layers.ToList();
-        }
-
-        public Network(IReadOnlyLayer<IMasterNode> inputLayer, params IReadOnlyLayer<INotInputNode>[] layers)
-            : this(inputLayer, layers.ToList())
-        {
-        }
-
         #endregion
 
         /// <summary> 
