@@ -46,6 +46,8 @@ namespace NeuralNetwork.Structure.Tests
 
             await network.Input(new[] { 1.0 });
 
+            Assert.Equal(network.InputLayer, network.Layers.First());
+            Assert.Equal(network.OutputLayer, network.Layers.Last());
             Assert.True(raised);
             Assert.Equal(synapseWeight, networkResultFirstNode);
             Assert.Equal(synapseWeight, outputCalculatedValue);

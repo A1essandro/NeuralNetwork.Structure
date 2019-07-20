@@ -84,6 +84,20 @@ namespace NeuralNetwork.Structure.Networks
 
         public virtual ICollection<ISynapse> Synapses => _synapses;
 
+        /// <summary>
+        /// All layers from input to output
+        /// </summary>
+        public IEnumerable<IReadOnlyLayer<INode>> Layers
+        {
+            get
+            {
+                yield return InputLayer;
+                foreach (var layer in InnerLayers)
+                    yield return layer;
+                yield return OutputLayer;
+            }
+        }
+
         #endregion
 
         #region ctors
