@@ -11,18 +11,22 @@ namespace NeuralNetwork.Structure.Nodes
     public class InputNode : IInputNode
     {
 
-        public event Func<IInput<double>, double, Task> OnInput;
+        public virtual double LastCalculatedValue { get; private set; }
 
-        public event Func<INode, double, Task> OnResultCalculated;
+        public virtual event Func<IInput<double>, double, Task> OnInput;
+
+        public virtual event Func<INode, double, Task> OnResultCalculated;
 
         public virtual void InsertInto(IReadOnlyLayer<INode> layer)
         {
         }
 
-        public async Task Input(double input)
+        public virtual async Task Input(double input)
         {
             if (OnInput != null)
                 await OnInput(this, input);
+
+            LastCalculatedValue = input;
 
             if (OnResultCalculated != null)
                 await OnResultCalculated(this, input);

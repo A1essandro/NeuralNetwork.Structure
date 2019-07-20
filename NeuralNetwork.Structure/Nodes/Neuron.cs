@@ -59,6 +59,8 @@ namespace NeuralNetwork.Structure.Nodes
             set => _actFunction = value;
         }
 
+        public virtual double LastCalculatedValue { get; private set; } = double.NaN;
+
         #endregion
 
         public virtual event Func<INode, double, Task> OnResultCalculated;
@@ -90,6 +92,8 @@ namespace NeuralNetwork.Structure.Nodes
         protected virtual async Task Calculate(ISummator summator, double value)
         {
             var result = _actFunction.GetEquation(value);
+
+            LastCalculatedValue = result;
 
             if (OnResultCalculated != null)
                 await OnResultCalculated(this, result);

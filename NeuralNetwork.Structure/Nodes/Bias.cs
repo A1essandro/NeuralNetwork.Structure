@@ -12,6 +12,8 @@ namespace NeuralNetwork.Structure.Nodes
 
         private const double VALUE = 1.0;
 
+        public double LastCalculatedValue => VALUE;
+
         public void InsertInto(IReadOnlyLayer<INode> layer)
         {
             layer.OnNetworkInput += _onNetworkInputHandler;

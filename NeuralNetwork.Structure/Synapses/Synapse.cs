@@ -34,6 +34,8 @@ namespace NeuralNetwork.Structure.Synapses
         [DataMember]
         public double Weight { get; set; }
 
+        public double LastCalculatedValue { get; private set; }
+
         public event Func<ISynapse, double, Task> OnResultCalculated;
 
         /// <summary>
@@ -74,7 +76,10 @@ namespace NeuralNetwork.Structure.Synapses
         {
             var result = _calculate(data);
 
-            await OnResultCalculated(this, result);
+            LastCalculatedValue = result;
+
+            if (OnResultCalculated != null)
+                await OnResultCalculated(this, result);
         }
 
         private double _calculate(double data) => Weight * data;

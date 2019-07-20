@@ -9,5 +9,7 @@ namespace NeuralNetwork.Structure.Common
 
         event Func<TThis, TData, Task> OnResultCalculated;
 
+        TData LastCalculatedValue { get; }
+
     }
 }

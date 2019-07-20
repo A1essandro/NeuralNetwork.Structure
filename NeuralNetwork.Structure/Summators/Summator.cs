@@ -15,6 +15,8 @@ namespace NeuralNetwork.Structure.Summators
 
         private ConcurrentDictionary<ISynapse, double> _memory = new ConcurrentDictionary<ISynapse, double>();
 
+        public virtual double LastCalculatedValue { get; private set; }
+
         public virtual event Func<ISummator, double, Task> OnResultCalculated;
 
         public virtual void ConnectTo(ISynapse connectionElement)
@@ -31,9 +33,13 @@ namespace NeuralNetwork.Structure.Summators
 
             if (_memory.Values.All(x => !double.IsNaN(x)))
             {
+                var result = Calculate(_memory.Values);
+
+                LastCalculatedValue = result;
+
                 if (OnResultCalculated != null)
                 {
-                    await Notify(Calculate(_memory.Values));
+                    await Notify(result);
                 }
 
                 foreach (var key in _memory.Keys)

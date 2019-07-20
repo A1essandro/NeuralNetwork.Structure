@@ -98,6 +98,8 @@ namespace NeuralNetwork.Structure.Networks
             }
         }
 
+        public virtual IEnumerable<double> LastCalculatedValue { get; protected set; }
+
         #endregion
 
         #region ctors
@@ -138,6 +140,7 @@ namespace NeuralNetwork.Structure.Networks
 
                 await _processInput(input);
 
+                LastCalculatedValue = _output;
                 if (OnResultCalculated != null)
                     await OnResultCalculated(this, _output);
             }
