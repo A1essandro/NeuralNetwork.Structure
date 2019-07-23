@@ -62,7 +62,7 @@ namespace NeuralNetwork.Structure.Networks
                 var i = 0;
                 foreach (var node in _outputLayer.Nodes)
                 {
-                    _outputPositions.Add(node, i);
+                    _outputPositions.Add(node, i++);
                     node.OnResultCalculated += _processOutput;
                 }
             }
