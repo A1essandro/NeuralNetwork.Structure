@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.489
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuralNetwork.Structure", "NeuralNetwork.Structure\NeuralNetwork.Structure.csproj", "{941FEBF6-BB93-46AE-A38C-CCB8DE866EFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralNetwork.Structure.Tests", "NeuralNetwork.Structure.Tests\NeuralNetwork.Structure.Tests.csproj", "{5E58BF73-3B74-4A93-A257-409AA54E1B09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuralNetwork.Structure.Tests", "NeuralNetwork.Structure.Tests\NeuralNetwork.Structure.Tests.csproj", "{5E58BF73-3B74-4A93-A257-409AA54E1B09}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{362DC8C7-C653-4B5F-B2FA-12007672D63E}"
 	ProjectSection(SolutionItems) = preProject
@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralNetwork.Structure.Benchmarks", "NeuralNetwork.Structure.Benchmarks\NeuralNetwork.Structure.Benchmarks.csproj", "{5FD5154D-009B-4003-BE4D-68F5CFC2C36C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,10 @@ Global
 		{5E58BF73-3B74-4A93-A257-409AA54E1B09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E58BF73-3B74-4A93-A257-409AA54E1B09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E58BF73-3B74-4A93-A257-409AA54E1B09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FD5154D-009B-4003-BE4D-68F5CFC2C36C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FD5154D-009B-4003-BE4D-68F5CFC2C36C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FD5154D-009B-4003-BE4D-68F5CFC2C36C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FD5154D-009B-4003-BE4D-68F5CFC2C36C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
