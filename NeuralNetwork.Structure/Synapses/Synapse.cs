@@ -2,7 +2,6 @@
 using NeuralNetwork.Structure.Nodes;
 using System;
 using System.Diagnostics.Contracts;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace NeuralNetwork.Structure.Synapses
@@ -12,26 +11,22 @@ namespace NeuralNetwork.Structure.Synapses
     /// Synapse gets output from neuron-transmitter and convert the value via its weight.
     /// Result value gets neuron-reciever.
     /// </summary>
-    [DataContract]
     public class Synapse : ISynapse
     {
 
         /// <summary>
         /// Transmitter node
         /// </summary>
-        [DataMember]
         public virtual INode MasterNode { get; protected set; }
 
         /// <summary>
         /// Receiver node
         /// </summary>
-        [DataMember]
         public virtual ISlaveNode SlaveNode { get; protected set; }
 
         /// <summary>
         /// Current weight of synapse
         /// </summary>
-        [DataMember]
         public double Weight { get; set; }
 
         public double LastCalculatedValue { get; private set; }

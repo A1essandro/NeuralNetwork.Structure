@@ -5,18 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace NeuralNetwork.Structure.Layers
 {
 
-    [DataContract]
     public abstract class BaseLayer<TNode> : ILayer<TNode>
         where TNode : INode
     {
 
-        [DataMember]
         protected List<TNode> NodeList = new List<TNode>();
 
         public event Func<IReadOnlyLayer<TNode>, IEnumerable<double>, Task> OnNetworkInput;

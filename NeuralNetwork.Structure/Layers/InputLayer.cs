@@ -10,9 +10,6 @@ using System.Threading.Tasks;
 namespace NeuralNetwork.Structure.Layers
 {
 
-    [DataContract]
-    [KnownType(typeof(InputNode))]
-    [KnownType(typeof(Bias))]
     public class InputLayer : BaseLayer<IMasterNode>, IInputLayer
     {
 

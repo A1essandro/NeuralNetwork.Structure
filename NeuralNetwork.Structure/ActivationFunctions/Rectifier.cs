@@ -9,11 +9,9 @@ namespace NeuralNetwork.Structure.ActivationFunctions
     /// <remarks>
     /// Any negative number to alpha*x. Any positive number leaves unchanged.
     /// </remarks>
-    [DataContract]
     public class Rectifier : IActivationFunction
     {
 
-        [DataMember]
         private readonly double _alpha;
 
         public Rectifier()

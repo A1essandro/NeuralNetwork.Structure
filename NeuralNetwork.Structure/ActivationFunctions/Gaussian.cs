@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace NeuralNetwork.Structure.ActivationFunctions
 {
 
-    [DataContract]
     public class Gaussian : IActivationFunction
     {
 

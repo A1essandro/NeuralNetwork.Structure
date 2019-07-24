@@ -7,9 +7,6 @@ using System.Runtime.Serialization;
 namespace NeuralNetwork.Structure.Layers
 {
 
-    [DataContract]
-    [KnownType(typeof(Neuron))]
-    [KnownType(typeof(Bias))]
     public class Layer : BaseLayer<INotInputNode>
     {
 

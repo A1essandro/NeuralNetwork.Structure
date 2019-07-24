@@ -1,13 +1,11 @@
 ﻿using NeuralNetwork.Structure.Common;
 using NeuralNetwork.Structure.Layers;
 using System;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace NeuralNetwork.Structure.Nodes
 {
 
-    [DataContract]
     public class InputNode : IInputNode
     {
 

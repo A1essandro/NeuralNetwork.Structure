@@ -135,28 +135,6 @@ namespace NeuralNetwork.Structure.Networks
             synapse.InsertInto(this);
         }
 
-        #region Clone
-
-        protected virtual T GetClone<T>() where T : SimpleNetwork
-        {
-            using (var stream = new MemoryStream())
-            {
-                var serSettings = new DataContractSerializerSettings() { PreserveObjectReferences = true };
-                var ser = new DataContractSerializer(typeof(T), serSettings);
-                ser.WriteObject(stream, this);
-                stream.Position = 0;
-
-                return ser.ReadObject(stream) as T;
-            }
-        }
-
-        public static T Clone<T>(T network) where T : SimpleNetwork
-        {
-            return network.GetClone<T>();
-        }
-
-        #endregion
-
         #region private methods
 
         private async Task _processInput(IEnumerable<double> input)

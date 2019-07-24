@@ -3,13 +3,11 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace NeuralNetwork.Structure.Summators
 {
 
-    [DataContract]
     public class Summator : ISummator
     {
 
