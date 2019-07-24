@@ -32,5 +32,30 @@ namespace NeuralNetwork.Structure.Nodes
                 await OnResultCalculated(this, input);
         }
 
+        #region IDisposable Support
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    OnInput = null;
+                    OnResultCalculated = null;
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        #endregion
+
     }
 }

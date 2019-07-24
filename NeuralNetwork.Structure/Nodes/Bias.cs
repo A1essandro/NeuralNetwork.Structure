@@ -24,5 +24,30 @@ namespace NeuralNetwork.Structure.Nodes
             if (OnResultCalculated != null)
                 await OnResultCalculated.Invoke(this, VALUE);
         }
+
+        #region IDisposable Support
+
+        private bool disposedValue = false;
+
+        private void _dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    OnResultCalculated = null;
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            _dispose(true);
+        }
+
+        #endregion
+
     }
 }

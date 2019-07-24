@@ -191,5 +191,36 @@ namespace NeuralNetwork.Structure.Networks
 
         #endregion
 
+        #region IDisposable Support
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    OnInput = null;
+                    OnResultCalculated = null;
+                    OnOutput = null;
+
+                    foreach(var synapse in Synapses)
+                        synapse.Dispose();
+                    foreach (var layer in Layers)
+                        layer.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        #endregion
+
     }
 }

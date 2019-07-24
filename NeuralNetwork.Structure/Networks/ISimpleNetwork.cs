@@ -2,12 +2,13 @@
 using NeuralNetwork.Structure.Layers;
 using NeuralNetwork.Structure.Nodes;
 using NeuralNetwork.Structure.Synapses;
+using System;
 using System.Collections.Generic;
 
 namespace NeuralNetwork.Structure.Networks
 {
 
-    public interface ISimpleNetwork : IInput<IEnumerable<double>>, IOutput<IEnumerable<double>>, IDataConductor<ISimpleNetwork, IEnumerable<double>>
+    public interface ISimpleNetwork : IInput<IEnumerable<double>>, IOutput<IEnumerable<double>>, IDataConductor<ISimpleNetwork, IEnumerable<double>>, IDisposable
     {
 
         /// <summary>

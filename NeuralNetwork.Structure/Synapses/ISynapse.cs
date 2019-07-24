@@ -1,6 +1,7 @@
 ﻿using NeuralNetwork.Structure.Common;
 using NeuralNetwork.Structure.Networks;
 using NeuralNetwork.Structure.Nodes;
+using System;
 
 namespace NeuralNetwork.Structure.Synapses
 {
@@ -9,7 +10,7 @@ namespace NeuralNetwork.Structure.Synapses
     /// Synapse gets output from neuron-transmitter and convert the value via its weight.
     /// Result value gets neuron-reciever.
     /// </summary>
-    public interface ISynapse : INumberConductor<ISynapse>, IConnectedElement<INode>, IChildStructure<ISimpleNetwork>
+    public interface ISynapse : INumberConductor<ISynapse>, IConnectedElement<INode>, IChildStructure<ISimpleNetwork>, IDisposable
     {
 
         /// <summary>

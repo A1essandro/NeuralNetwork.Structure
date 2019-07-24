@@ -10,27 +10,14 @@ using System.Threading.Tasks;
 namespace NeuralNetwork.Structure.Nodes
 {
 
-    [DataContract]
-    [KnownType(typeof(Summator))]
-    [KnownType(typeof(Synapse))]
-    [KnownType(typeof(Rectifier))]
-    [KnownType(typeof(Logistic))]
-    [KnownType(typeof(Linear))]
-    [KnownType(typeof(Gaussian))]
-    [KnownType(typeof(AsIs))]
     public class Neuron : ISlaveNode
     {
 
         #region serialization data
 
-        [DataMember]
         private readonly ICollection<ISynapse> _synapses = new List<ISynapse>();
 
-        [DataMember]
         protected ISummator _summator;
-
-        [DataMember]
-        private IActivationFunction _actFunction;
 
         #endregion
 
@@ -53,11 +40,7 @@ namespace NeuralNetwork.Structure.Nodes
             }
         }
 
-        public IActivationFunction Function
-        {
-            get => _actFunction;
-            set => _actFunction = value;
-        }
+        public virtual IActivationFunction Function { get; set; }
 
         public virtual double LastCalculatedValue { get; private set; } = double.NaN;
 
@@ -74,7 +57,7 @@ namespace NeuralNetwork.Structure.Nodes
 
         public Neuron(IActivationFunction function, ISummator summator = null)
         {
-            _actFunction = function;
+            Function = function;
             Summator = summator ?? DefaultSummator;
         }
 
@@ -91,13 +74,37 @@ namespace NeuralNetwork.Structure.Nodes
 
         protected virtual async Task Calculate(ISummator summator, double value)
         {
-            var result = _actFunction.GetEquation(value);
+            var result = Function.GetEquation(value);
 
             LastCalculatedValue = result;
 
             if (OnResultCalculated != null)
                 await OnResultCalculated(this, result);
         }
+
+        #region IDisposable Support
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    OnResultCalculated = null;
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        #endregion
 
     }
 

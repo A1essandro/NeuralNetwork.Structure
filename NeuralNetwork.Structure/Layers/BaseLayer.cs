@@ -87,5 +87,32 @@ namespace NeuralNetwork.Structure.Layers
                 await OnNetworkInput(this, input);
         }
 
+        #region IDisposable Support
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    OnNetworkInput = null;
+
+                    foreach (var node in Nodes)
+                        node.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        #endregion
+
     }
 }
