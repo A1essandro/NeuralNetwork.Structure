@@ -5,9 +5,7 @@ using NeuralNetwork.Structure.Synapses;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -126,13 +124,15 @@ namespace NeuralNetwork.Structure.Networks
             }
         }
 
-        public void AddSynapse(ISynapse synapse)
+        public ISimpleNetwork AddSynapse(ISynapse synapse)
         {
             Contract.Requires(synapse != null, nameof(synapse));
 
             _synapses.Add(synapse);
 
             synapse.InsertInto(this);
+
+            return this;
         }
 
         #region private methods

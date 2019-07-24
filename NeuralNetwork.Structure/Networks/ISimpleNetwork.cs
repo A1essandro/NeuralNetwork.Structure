@@ -35,7 +35,7 @@ namespace NeuralNetwork.Structure.Networks
         /// Add and connect synapse
         /// </summary>
         /// <param name="synapse"></param>
-        void AddSynapse(ISynapse synapse);
+        ISimpleNetwork AddSynapse(ISynapse synapse);
 
     }
 
