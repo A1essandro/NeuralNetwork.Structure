@@ -1,4 +1,5 @@
-﻿using NeuralNetwork.Structure.Layers;
+﻿using NeuralNetwork.Structure.Internal.Extensions;
+using NeuralNetwork.Structure.Layers;
 using NeuralNetwork.Structure.Nodes;
 using System.Collections.Generic;
 
@@ -32,11 +33,14 @@ namespace NeuralNetwork.Structure.Networks
 
         public virtual IMultilayerNetwork AddInnerLayer(ILayer<INotInputNode> layer)
         {
-            _innerLayers.Add(layer);
+            using (ProcessingLocker.UseWait())
+            {
+                _innerLayers.Add(layer);
 
-            layer.InsertInto(this);
+                layer.InsertInto(this);
 
-            return this;
+                return this;
+            }
         }
 
     }

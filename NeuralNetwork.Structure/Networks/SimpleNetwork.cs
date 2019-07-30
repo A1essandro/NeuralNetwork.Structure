@@ -1,4 +1,5 @@
 ﻿using NeuralNetwork.Structure.Common;
+using NeuralNetwork.Structure.Internal.Extensions;
 using NeuralNetwork.Structure.Layers;
 using NeuralNetwork.Structure.Nodes;
 using NeuralNetwork.Structure.Synapses;
@@ -22,7 +23,7 @@ namespace NeuralNetwork.Structure.Networks
         private IDictionary<INode, int> _outputPositions;
         private double[] _output;
 
-        private SemaphoreSlim _processingLocker = new SemaphoreSlim(1, 1);
+        protected SemaphoreSlim ProcessingLocker = new SemaphoreSlim(1, 1);
 
         #region Events
 
@@ -92,47 +93,38 @@ namespace NeuralNetwork.Structure.Networks
         {
             Contract.Requires(input != null, nameof(input));
 
-            try
+            using (await ProcessingLocker.UseWaitAsync())
             {
-                await _processingLocker.WaitAsync();
-
                 await _processInput(input);
 
                 LastCalculatedValue = _output;
                 if (OnResultCalculated != null)
                     await OnResultCalculated(this, _output);
             }
-            finally
-            {
-                _processingLocker.Release();
-            }
         }
 
         public virtual async Task<IEnumerable<double>> Output()
         {
-            try
+            using (await ProcessingLocker.UseWaitAsync())
             {
-                await _processingLocker.WaitAsync();
-
                 OnOutput?.Invoke(_output);
 
                 return _output;
-            }
-            finally
-            {
-                _processingLocker.Release();
             }
         }
 
         public ISimpleNetwork AddSynapse(ISynapse synapse)
         {
-            Contract.Requires(synapse != null, nameof(synapse));
+            using (ProcessingLocker.UseWait())
+            {
+                Contract.Requires(synapse != null, nameof(synapse));
 
-            _synapses.Add(synapse);
+                _synapses.Add(synapse);
 
-            synapse.InsertInto(this);
+                synapse.InsertInto(this);
 
-            return this;
+                return this;
+            }
         }
 
         #region private methods
