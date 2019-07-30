@@ -8,11 +8,16 @@ namespace NeuralNetwork.Structure.Nodes
     public sealed class Bias : IMasterNode, INotInputNode
     {
 
+        private const double DEFAULT_VALUE = 1.0;
+
         public event Func<INode, double, Task> OnResultCalculated;
 
-        private const double VALUE = 1.0;
+        public double LastCalculatedValue { get; }
 
-        public double LastCalculatedValue => VALUE;
+        public Bias(double value = DEFAULT_VALUE)
+        {
+            LastCalculatedValue = value;
+        }
 
         public void InsertInto(IReadOnlyLayer<INode> layer)
         {
@@ -27,7 +32,7 @@ namespace NeuralNetwork.Structure.Nodes
         private async Task _onNetworkInputHandler(IReadOnlyLayer<INode> layer, IEnumerable<double> input)
         {
             if (OnResultCalculated != null)
-                await OnResultCalculated.Invoke(this, VALUE);
+                await OnResultCalculated.Invoke(this, LastCalculatedValue);
         }
 
         #region IDisposable Support
