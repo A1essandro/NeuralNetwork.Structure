@@ -11,5 +11,7 @@ namespace NeuralNetwork.Structure.Networks
 
         IMultilayerNetwork AddInnerLayer(ILayer<INotInputNode> layer);
 
+        IMultilayerNetwork RemoveInnerLayer(ILayer<INotInputNode> layer);
+
     }
 }

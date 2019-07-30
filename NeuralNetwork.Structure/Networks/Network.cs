@@ -43,5 +43,17 @@ namespace NeuralNetwork.Structure.Networks
             }
         }
 
+        public virtual IMultilayerNetwork RemoveInnerLayer(ILayer<INotInputNode> layer)
+        {
+            using (ProcessingLocker.UseWait())
+            {
+                _innerLayers.Remove(layer);
+
+                layer.RemoveFrom(this);
+
+                return this;
+            }
+        }
+
     }
 }

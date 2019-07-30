@@ -19,6 +19,11 @@ namespace NeuralNetwork.Structure.Nodes
             layer.OnNetworkInput += _onNetworkInputHandler;
         }
 
+        public void RemoveFrom(IReadOnlyLayer<INode> layer)
+        {
+            layer.OnNetworkInput -= _onNetworkInputHandler;
+        }
+
         private async Task _onNetworkInputHandler(IReadOnlyLayer<INode> layer, IEnumerable<double> input)
         {
             if (OnResultCalculated != null)

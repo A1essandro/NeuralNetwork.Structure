@@ -19,6 +19,10 @@ namespace NeuralNetwork.Structure.Nodes
         {
         }
 
+        public void RemoveFrom(IReadOnlyLayer<INode> parentStructure)
+        {
+        }
+
         public virtual async Task Input(double input)
         {
             if (OnInput != null)

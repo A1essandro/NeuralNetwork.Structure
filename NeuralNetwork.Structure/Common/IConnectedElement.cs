@@ -6,6 +6,8 @@
 
         void ConnectTo(T connectionElement);
 
+        void DisconnectFrom(T connectionElement);
+
     }
 
 }

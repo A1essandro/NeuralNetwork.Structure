@@ -24,6 +24,13 @@ namespace NeuralNetwork.Structure.Summators
             _memory.TryAdd(connectionElement, double.NaN);
         }
 
+        public void DisconnectFrom(ISynapse connectionElement)
+        {
+            connectionElement.OnResultCalculated -= _retain;
+
+            _memory.TryRemove(connectionElement, out var _);
+        }
+
         //TODO: need optimization
         private async Task _retain(ISynapse synapse, double value)
         {

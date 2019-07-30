@@ -78,6 +78,11 @@ namespace NeuralNetwork.Structure.Layers
             network.OnInput += OnNetworkInputHandler;
         }
 
+        public void RemoveFrom(ISimpleNetwork network)
+        {
+            network.OnInput -= OnNetworkInputHandler;
+        }
+
         protected virtual async Task OnNetworkInputHandler(IInput<IEnumerable<double>> network, IEnumerable<double> input)
         {
             if (OnNetworkInput != null)

@@ -72,6 +72,15 @@ namespace NeuralNetwork.Structure.Nodes
             _summator.ConnectTo(connectionElement);
         }
 
+        public void RemoveFrom(IReadOnlyLayer<INode> parentStructure)
+        {;
+        }
+
+        public void DisconnectFrom(ISynapse connectionElement)
+        {
+            _summator.DisconnectFrom(connectionElement);
+        }
+
         protected virtual async Task Calculate(ISummator summator, double value)
         {
             var result = Function.GetEquation(value);

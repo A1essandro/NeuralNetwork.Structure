@@ -6,6 +6,8 @@
 
         void InsertInto(TParentStructure parentStructure);
 
+        void RemoveFrom(TParentStructure parentStructure);
+
     }
 
 }

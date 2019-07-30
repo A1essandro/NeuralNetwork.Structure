@@ -60,9 +60,21 @@ namespace NeuralNetwork.Structure.Synapses
             MasterNode.OnResultCalculated += _conductData;
         }
 
+        public void DisconnectFrom(INode connectionElement)
+        {
+            MasterNode = null;
+
+            MasterNode.OnResultCalculated -= _conductData;
+        }
+
         public void InsertInto(ISimpleNetwork parentStructure)
         {
             SlaveNode.ConnectTo(this);
+        }
+
+        public void RemoveFrom(ISimpleNetwork parentStructure)
+        {
+            SlaveNode.DisconnectFrom(this);
         }
 
         #region private methods
