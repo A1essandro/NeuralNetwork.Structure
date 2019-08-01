@@ -31,14 +31,5 @@ namespace NeuralNetwork.Structure.Tests
             Assert.IsType<Bias>(layer.Nodes.Last());
         }
 
-        [Fact]
-        public void TestInputLayer2D()
-        {
-            ushort neuronsQty = 12;
-            var layer = new Layer2D<IMasterNode>(() => new InputNode(), neuronsQty, 3, 4);
-
-            Assert.Equal(neuronsQty, layer.NodesQuantity);
-        }
-
     }
 }

@@ -1,9 +1,9 @@
-using NeuralNetwork.Structure.Common;
-using NeuralNetwork.Structure.Networks;
-using NeuralNetwork.Structure.Nodes;
+using NeuralNetwork.Structure.Contract.Common;
+using NeuralNetwork.Structure.Contract.Layers;
+using NeuralNetwork.Structure.Contract.Networks;
+using NeuralNetwork.Structure.Contract.Nodes;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,7 +30,7 @@ namespace NeuralNetwork.Structure.Layers
 
         public BaseLayer(IEnumerable<TNode> nodes)
         {
-            Contract.Assert(nodes != null, nameof(nodes));
+            System.Diagnostics.Contracts.Contract.Assert(nodes != null, nameof(nodes));
 
             NodeList = nodes.ToList();
         }
@@ -42,8 +42,8 @@ namespace NeuralNetwork.Structure.Layers
 
         public BaseLayer(Func<TNode> factory, int qty, params TNode[] other)
         {
-            Contract.Assert(factory != null, nameof(factory));
-            Contract.Assert(qty >= 0, nameof(qty));
+            System.Diagnostics.Contracts.Contract.Assert(factory != null, nameof(factory));
+            System.Diagnostics.Contracts.Contract.Assert(qty >= 0, nameof(qty));
 
             for (var i = 0; i < qty; i++)
             {
@@ -59,7 +59,7 @@ namespace NeuralNetwork.Structure.Layers
 
         public void AddNode(TNode node)
         {
-            Contract.Assert(node != null, nameof(node));
+            System.Diagnostics.Contracts.Contract.Assert(node != null, nameof(node));
 
             NodeList.Add(node);
 
@@ -68,7 +68,7 @@ namespace NeuralNetwork.Structure.Layers
 
         public bool RemoveNode(TNode node)
         {
-            Contract.Assert(node != null, nameof(node));
+            System.Diagnostics.Contracts.Contract.Assert(node != null, nameof(node));
 
             return NodeList.Remove(node);
         }

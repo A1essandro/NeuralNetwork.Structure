@@ -1,4 +1,5 @@
-﻿using NeuralNetwork.Structure.Synapses;
+﻿using NeuralNetwork.Structure.Contract.Summators;
+using NeuralNetwork.Structure.Contract.Synapses;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

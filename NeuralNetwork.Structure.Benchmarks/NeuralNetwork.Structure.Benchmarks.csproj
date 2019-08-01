@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
+    <PackageReference Include="NeuralNetwork.Structure.Contract" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>

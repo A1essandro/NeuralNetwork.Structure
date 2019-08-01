@@ -1,11 +1,11 @@
-﻿using NeuralNetwork.Structure.Common;
+﻿using NeuralNetwork.Structure.Contract.Common;
+using NeuralNetwork.Structure.Contract.Layers;
+using NeuralNetwork.Structure.Contract.Networks;
+using NeuralNetwork.Structure.Contract.Nodes;
+using NeuralNetwork.Structure.Contract.Synapses;
 using NeuralNetwork.Structure.Internal.Extensions;
-using NeuralNetwork.Structure.Layers;
-using NeuralNetwork.Structure.Nodes;
-using NeuralNetwork.Structure.Synapses;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -91,7 +91,7 @@ namespace NeuralNetwork.Structure.Networks
         /// <param name="input"></param>
         public virtual async Task Input(IEnumerable<double> input)
         {
-            Contract.Requires(input != null, nameof(input));
+            System.Diagnostics.Contracts.Contract.Requires(input != null, nameof(input));
 
             using (await ProcessingLocker.UseWaitAsync())
             {
@@ -117,7 +117,7 @@ namespace NeuralNetwork.Structure.Networks
         {
             using (ProcessingLocker.UseWait())
             {
-                Contract.Requires(synapse != null, nameof(synapse));
+                System.Diagnostics.Contracts.Contract.Requires(synapse != null, nameof(synapse));
 
                 _synapses.Add(synapse);
 

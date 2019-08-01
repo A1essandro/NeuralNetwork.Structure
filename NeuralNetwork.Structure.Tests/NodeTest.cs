@@ -1,8 +1,9 @@
 ﻿using Moq;
-using NeuralNetwork.Structure.ActivationFunctions;
-using NeuralNetwork.Structure.Layers;
+using NeuralNetwork.Structure.Contract.ActivationFunctions;
+using NeuralNetwork.Structure.Contract.Layers;
+using NeuralNetwork.Structure.Contract.Nodes;
+using NeuralNetwork.Structure.Contract.Synapses;
 using NeuralNetwork.Structure.Nodes;
-using NeuralNetwork.Structure.Synapses;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

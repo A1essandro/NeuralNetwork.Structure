@@ -1,6 +1,7 @@
-﻿using NeuralNetwork.Structure.ActivationFunctions;
-using NeuralNetwork.Structure.Summators;
-using NeuralNetwork.Structure.Synapses;
+﻿using NeuralNetwork.Structure.Contract.ActivationFunctions;
+using NeuralNetwork.Structure.Contract.Nodes;
+using NeuralNetwork.Structure.Contract.Summators;
+using NeuralNetwork.Structure.Contract.Synapses;
 using System;
 using System.Collections.Generic;
 using System.Linq;

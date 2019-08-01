@@ -1,6 +1,6 @@
 ﻿using Moq;
+using NeuralNetwork.Structure.Contract.Synapses;
 using NeuralNetwork.Structure.Summators;
-using NeuralNetwork.Structure.Synapses;
 using System.Threading.Tasks;
 using Xunit;
 

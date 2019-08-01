@@ -1,5 +1,5 @@
 ﻿using Moq;
-using NeuralNetwork.Structure.Nodes;
+using NeuralNetwork.Structure.Contract.Nodes;
 using NeuralNetwork.Structure.Synapses;
 using System.Threading.Tasks;
 using Xunit;

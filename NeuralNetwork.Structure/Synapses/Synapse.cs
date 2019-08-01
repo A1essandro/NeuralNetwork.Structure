@@ -1,7 +1,7 @@
-﻿using NeuralNetwork.Structure.Networks;
-using NeuralNetwork.Structure.Nodes;
+﻿using NeuralNetwork.Structure.Contract.Networks;
+using NeuralNetwork.Structure.Contract.Nodes;
+using NeuralNetwork.Structure.Contract.Synapses;
 using System;
-using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 
 namespace NeuralNetwork.Structure.Synapses
@@ -44,7 +44,7 @@ namespace NeuralNetwork.Structure.Synapses
 
         public Synapse(INode masterNode, ISlaveNode slaveNode, double weight)
         {
-            Contract.Requires(masterNode != null, nameof(masterNode));
+            System.Diagnostics.Contracts.Contract.Requires(masterNode != null, nameof(masterNode));
 
             MasterNode = masterNode;
             SlaveNode = slaveNode;

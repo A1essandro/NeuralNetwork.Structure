@@ -1,3 +1,4 @@
+using NeuralNetwork.Structure.Contract.ActivationFunctions;
 using System;
 
 namespace NeuralNetwork.Structure.ActivationFunctions

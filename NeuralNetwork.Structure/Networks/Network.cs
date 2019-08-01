@@ -1,6 +1,7 @@
-﻿using NeuralNetwork.Structure.Internal.Extensions;
-using NeuralNetwork.Structure.Layers;
-using NeuralNetwork.Structure.Nodes;
+﻿using NeuralNetwork.Structure.Contract.Layers;
+using NeuralNetwork.Structure.Contract.Networks;
+using NeuralNetwork.Structure.Contract.Nodes;
+using NeuralNetwork.Structure.Internal.Extensions;
 using System.Collections.Generic;
 
 namespace NeuralNetwork.Structure.Networks

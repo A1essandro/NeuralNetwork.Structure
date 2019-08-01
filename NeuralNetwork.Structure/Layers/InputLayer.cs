@@ -1,10 +1,9 @@
-﻿using NeuralNetwork.Structure.Common;
-using NeuralNetwork.Structure.Nodes;
+﻿using NeuralNetwork.Structure.Contract.Common;
+using NeuralNetwork.Structure.Contract.Layers;
+using NeuralNetwork.Structure.Contract.Nodes;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace NeuralNetwork.Structure.Layers
@@ -33,7 +32,7 @@ namespace NeuralNetwork.Structure.Layers
         public async Task Input(IEnumerable<double> input)
         {
             var inputNodes = Nodes.OfType<IInputNode>().ToArray();
-            Contract.Requires(input.Count() == inputNodes.Length, nameof(input));
+            System.Diagnostics.Contracts.Contract.Requires(input.Count() == inputNodes.Length, nameof(input));
 
             if (OnInput != null)
                 await OnInput.Invoke(this, input);

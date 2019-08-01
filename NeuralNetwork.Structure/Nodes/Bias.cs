@@ -1,4 +1,5 @@
-﻿using NeuralNetwork.Structure.Layers;
+﻿using NeuralNetwork.Structure.Contract.Layers;
+using NeuralNetwork.Structure.Contract.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

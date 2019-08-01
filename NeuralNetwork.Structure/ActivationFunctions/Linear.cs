@@ -1,4 +1,6 @@
-﻿namespace NeuralNetwork.Structure.ActivationFunctions
+﻿using NeuralNetwork.Structure.Contract.ActivationFunctions;
+
+namespace NeuralNetwork.Structure.ActivationFunctions
 {
     /// <summary>
     /// Function y(x) = a*x

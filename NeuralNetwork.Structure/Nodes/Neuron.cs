@@ -1,10 +1,12 @@
 ﻿using NeuralNetwork.Structure.ActivationFunctions;
-using NeuralNetwork.Structure.Layers;
+using NeuralNetwork.Structure.Contract.ActivationFunctions;
+using NeuralNetwork.Structure.Contract.Layers;
+using NeuralNetwork.Structure.Contract.Nodes;
+using NeuralNetwork.Structure.Contract.Summators;
+using NeuralNetwork.Structure.Contract.Synapses;
 using NeuralNetwork.Structure.Summators;
-using NeuralNetwork.Structure.Synapses;
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace NeuralNetwork.Structure.Nodes
