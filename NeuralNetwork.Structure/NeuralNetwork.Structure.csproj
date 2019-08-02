@@ -1,17 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Title>Structure of neutal network</Title>
     <TargetFramework>netstandard1.3</TargetFramework>
     <PackageId>NeuralNetwork.Structure</PackageId>
     <Version>$(Version)</Version>
     <PackageVersion>$(PackageVersion)</PackageVersion>
     <Authors>Alexander Yermakov</Authors>
-    <PackageTags>neural network, neurons</PackageTags>
+    <PackageTags>neural network; neurons; synapses; AI</PackageTags>
     <PackageLicenseUrl>https://github.com/A1essandro/NeuralNetwork.Structure/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/A1essandro/NeuralNetwork.Structure</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/A1essandro/NeuralNetwork.Structure.git</RepositoryUrl>
     <RootNamespace>NeuralNetwork.Structure</RootNamespace>
+    <PackageDescription>Implementation of neural network structure.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>
