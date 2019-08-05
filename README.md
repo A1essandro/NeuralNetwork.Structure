@@ -65,10 +65,10 @@ var outputNode = new Neuron(); //activation function and summator by default
 var innerNode0 = new Neuron(new Rectifier(), new Summator());
 var innerNode1 = new Neuron(new Quadratic(), new Summator());
 
-network.InputLayer = new InputLayer(new InputLayer(inputNode0, inputNode1)); //create and init empty input layer for network
-network.OutputLayer = new Layer(new Layer(outputNode)); //create and init empty output layer for network
+network.InputLayer = new InputLayer(new InputLayer(inputNode0, inputNode1)); //create and init input layer for network
+network.OutputLayer = new Layer(new Layer(outputNode)); //create and init output layer for network
 
-network.AddInnerLayer(new Layer(innerNode, innerNode1)); //create and add empty input layer for network (only for Network, not for SimpleNetwork)
+network.AddInnerLayer(new Layer(innerNode, innerNode1)); //create and add inner layer for network (only for Network, not for SimpleNetwork)
 
 ```
 
@@ -86,6 +86,45 @@ var synapse = new Synapse(input, output, synapseWeight); //synapseWeight is not 
 network.AddSynapse(synapse);
 
 ```
+
+## Input/Output
+
+### Input
+
+Use the `Input` method to enter input data:
+
+```cs
+
+ICollection<double> inputData = ...;
+await network.Input(inputData);
+
+```
+
+### Output
+
+After calling `Input` method, you can use method `Output`:
+
+```cs
+
+IEnumerable<double> outputData = await network.Output();
+
+```
+
+Also you can subscribe to the event `OnResultCalculated`:
+
+```cs
+
+//n - is the network (ISimpleNetwork)
+//v - is the calculated result (IEnumerable<double>)
+network.OnResultCalculated += (n, v) =>
+{
+    result = v;
+    return Task.CompletedTask;
+};
+
+```
+
+When using both variants, the event will be processed first.
 
 ## Learning
 
